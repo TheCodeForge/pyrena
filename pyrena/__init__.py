@@ -302,44 +302,44 @@ class Arena():
         else:
             classes.OBJ_CACHE={}
 
-    #@property
-    def docs(self):
-
-        """
-        Generate and display this documentation page.
-        """
-
-        classlist = {name:cls for name, cls in list(classes.__dict__.items()) if isinstance(cls, type) and name!="Object"}
-        classlist["Arena"]=Arena
-
-        #page header
-        md = "# `Pyrena Docs`\n\n"
-
-        #Iterate through classes (including the Arena client class)
-        for class_name in sorted(classlist.keys()):
-            class_obj = classlist[class_name]
-
-            methods=[x for x in sorted(dir(class_obj)) if callable(getattr(class_obj, x)) and not x.startswith('_')]
-
-            params=inspect.signature(class_obj.__init__).parameters
-            class_args=[f"{'*' if params[x].name=='args' else ''}{'**' if params[x].name=='kwargs' else ''}{params[x].name}{f'={params[x].default.__repr__()}' if params[x].default != params[x].empty else ''}" for x in params]
-
-            md+= f"## `{class_name}({', '.join(class_args)})`\n\n{f'{class_obj.__init__.__doc__}' if class_obj.__init__.__doc__ else ''}\n\n"
-
-            #iterate through callable methods of that class
-            for method in methods:
-
-                params=inspect.signature(getattr(class_obj, method)).parameters
-
-                args = [f"{'*' if params[x].name=='args' else ''}{'**' if params[x].name=='kwargs' else ''}{params[x].name}{f'={params[x].default.__repr__()}' if params[x].default != params[x].empty else ''}" for x in params if params[x].name!='self']
-
-
-                md+= f"### `{method}({', '.join(args)})`\n\n{getattr(class_obj, method).__doc__}\n\n"
-
-        with open("pyrena.html", "w+") as file:
-            file.write(mistletoe.markdown(md))
-            file.truncate()
-
-        webbrowser.open("pyrena.html")
-
         return True
+
+
+def docs():
+
+    """
+    Generate and display this documentation page.
+    """
+
+    classlist = {name:cls for name, cls in list(classes.__dict__.items()) if isinstance(cls, type) and name!="Object"}
+    classlist["Arena"]=Arena
+
+    #page header
+    md = "# `Pyrena Docs`\n\n"
+
+    #Iterate through classes (including the Arena client class)
+    for class_name in sorted(classlist.keys()):
+        class_obj = classlist[class_name]
+
+        methods=[x for x in sorted(dir(class_obj)) if callable(getattr(class_obj, x)) and not x.startswith('_')]
+
+        params=inspect.signature(class_obj.__init__).parameters
+        class_args=[f"{'*' if params[x].name=='args' else ''}{'**' if params[x].name=='kwargs' else ''}{params[x].name}{f'={params[x].default.__repr__()}' if params[x].default != params[x].empty else ''}" for x in params]
+
+        md+= f"## `{class_name}({', '.join(class_args)})`\n\n{f'{class_obj.__init__.__doc__}' if class_obj.__init__.__doc__ else ''}\n\n"
+
+        #iterate through callable methods of that class
+        for method in methods:
+
+            params=inspect.signature(getattr(class_obj, method)).parameters
+
+            args = [f"{'*' if params[x].name=='args' else ''}{'**' if params[x].name=='kwargs' else ''}{params[x].name}{f'={params[x].default.__repr__()}' if params[x].default != params[x].empty else ''}" for x in params if params[x].name!='self']
+
+
+            md+= f"### `{method}({', '.join(args)})`\n\n{getattr(class_obj, method).__doc__}\n\n"
+
+    with open("pyrena.html", "w+") as file:
+        file.write(mistletoe.markdown(md))
+        file.truncate()
+
+    webbrowser.open("pyrena.html")
