@@ -10,5 +10,8 @@ setuptools.setup(
 		"mistletoe",
 		"requests"
 	],
-	packages=setuptools.find_packages()
+	packages=setuptools.find_packages(),
+	package_dir={
+		"pyrena":"pyrena"
+	}
 )
