@@ -9,7 +9,7 @@ import warnings
 import urllib3
 import ssl
 
-import classes
+import pyrena.classes as classes
 
 class ArenaHTTPError(Exception):
     pass
