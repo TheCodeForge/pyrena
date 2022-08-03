@@ -96,15 +96,15 @@ class Object():
     def __eq__(self, other):
         return self.__repr__==other.__repr__
 
-    def __getattr__(self, name):
+    # def __getattr__(self, name):
 
-        # "2018-06-01T06:59:59Z"
-        if name.endswith("_utc"):
-            target_name=f"{name.split('_utc')[0]}DateTime"
-            target_time=self.__dict__[target_name]
-            return int(time.mktime(time.strptime(self.__dict__[target_name], "%Y-%m-%dT%H:%M:%SZ")))
+    #     # "2018-06-01T06:59:59Z"
+    #     if name.endswith("_utc"):
+    #         target_name=f"{name.split('_utc')[0]}DateTime"
+    #         target_time=self.__dict__[target_name]
+    #         return int(time.mktime(time.strptime(self.__dict__[target_name], "%Y-%m-%dT%H:%M:%SZ")))
 
-        return self.__dict__[name]
+    #     return self.__dict__[name]
 
 
 
