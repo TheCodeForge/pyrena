@@ -336,10 +336,10 @@ class Arena():
 
                 md+= f"### `{method}({', '.join(args)})`\n\n{getattr(class_obj, method).__doc__}\n\n"
 
-        with open("filename.html", "w+") as file:
+        with open("pyrena.html", "w+") as file:
             file.write(mistletoe.markdown(md))
             file.truncate()
 
-        webbrowser.open("filename.html")
+        webbrowser.open("pyrena.html")
 
         return True
