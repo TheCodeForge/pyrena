@@ -13,7 +13,8 @@ class UserGroup(Object):
     listing_endpoint = "/settings/usergroups"
     endpoint=listing_endpoint+"/{guid}"
 
-    @cachedproperty
+    @property
+    @lazy
     def users(self):
 
         return self._client.Listing(self._client.User, endpoint=f"/settings/usergroups/{self.guid}/users")

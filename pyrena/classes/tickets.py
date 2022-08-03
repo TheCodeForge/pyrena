@@ -30,28 +30,32 @@ class Ticket(Object):
         self.__dict__.update(x.json())
 
 
-    @cachedproperty
+    @property
+    @lazy
     def file_associations(self):
         assocs = self._client.Listing(self._client.TicketFileAssociation, endpoint=f"/tickets/{self.guid}/files")
         for assoc in assocs:
             assoc.ticket=self
         return assocs
 
-    @cachedproperty
+    @property
+    @lazy
     def change_associations(self):
         assocs = self._client.Listing(self._client.TicketChangeAssociation, endpoint=f"/tickets/{self.guid}/changes")
         for assoc in assocs:
             assoc.ticket=self
         return assocs
 
-    @cachedproperty
+    @property
+    @lazy
     def quality_associations(self):
         assocs = self._client.Listing(self._client.TicketQualityAssociation, endpoint=f"/tickets/{self.guid}/quality")
         for assoc in assocs:
             assoc.ticket=self
         return assocs
 
-    @cachedproperty
+    @property
+    @lazy
     def ticket_associations(self):
         assocs = self._client.Listing(self._client.TicketTicketAssociation, endpoint=f"/tickets/{self.guid}/tickets")
         for assoc in assocs:
@@ -80,7 +84,8 @@ class Ticket(Object):
 
 class TicketFileAssociation(Object):
     
-    @cachedproperty
+    @property
+    @lazy
     def file(self):
         return self._client.File(self.__dict__['file']['guid'])
 
@@ -89,7 +94,8 @@ class TicketFileAssociation(Object):
         return f"/tickets/{self.ticket.guid}/files/{self.guid}"
 
 class TicketChangeAssociation(Object):
-    @cachedproperty
+    @property
+    @lazy
     def change(self):
         return self._client.Change(self.__dict__['change']['guid'])
 
@@ -99,7 +105,8 @@ class TicketChangeAssociation(Object):
 
 class TicketQualityAssociation(Object):
     
-    @cachedproperty
+    @property
+    @lazy
     def quality(self):
         return self._client.QualityProcess(self.__dict__['quality']['guid'])
 
@@ -109,7 +116,8 @@ class TicketQualityAssociation(Object):
 
 class TicketTicketAssociation(Object):
     
-    @cachedproperty
+    @property
+    @lazy
     def other_ticket(self):
         return self._client.Ticket(self.__dict__['ticket']['guid'])
 

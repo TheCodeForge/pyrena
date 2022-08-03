@@ -5,12 +5,14 @@ class Integration(Object):
     listing_endpoint="/outboundintegrations"
     endpoint=listing_endpoint+"/{guid}"
 
-    @cachedproperty
+    @property
+    @lazy
     def administrators(self):
         data = self._client._get("/outboundintegrations/{self.guid}/administrators")
         return [self._client.User(guid=x) for x in [entry["guid"] for entry in data["results"]]]
 
-    @cachedproperty
+    @property
+    @lazy
     def events(self):
         events = self._client.Listing(self._client.Event, endpoint=f"/outboundintegrations/{self.guid}/events")
         for event in events:
@@ -24,7 +26,8 @@ class Event(Object):
     def endpoint(self):
         return self.integration.endpoint+f"/events/{self.guid}"
 
-    @cachedproperty
+    @property
+    @lazy
     def items(self):
         items = self._client.Listing(self._client.EventItem, endpoint=f"{self.endpoint}/items")
         for item in items:
@@ -46,7 +49,8 @@ class Event(Object):
         return self._client._put(self.endpoint, data={"itemsReconciled":False})
 
 
-    @cachedproperty
+    @property
+    @lazy
     def change(self):
         return self._client.Change(guid=self.change["guid"])
 
@@ -91,7 +95,8 @@ class EventItem(Object):
 
         return self._client._put(self.endpoint, data={"reconciled":False})
 
-    @cachedproperty
+    @property
+    @lazy
     def item(self):
 
         return self._client.Item(guid=self.effectiveItemRevision["guid"])

@@ -4,7 +4,8 @@ class File(Object):
     listing_endpoint="/files"
     endpoint="/files/{guid}"
 
-    @cachedproperty
+    @property
+    @lazy
     def author(self):
         return self._client.User(self.__dict__['author'])
 
@@ -85,15 +86,18 @@ class File(Object):
 
         return returnval
 
-    @cachedproperty
+    @property
+    @lazy
     def corrections(self):
         return self._client.Listing(self._client.FileCorrection, endpoint=f"/files/{self.guid}/corrections")
 
-    @cachedproperty
+    @property
+    @lazy
     def editions(self):
         return self._client.Listing(self._client.File, endpoint=f"/files/{self.guid}/editions")
 
-    @cachedproperty
+    @property
+    @lazy
     def content(self):
         return self._client._get(f"/files/{self.guid}/content").content
 

@@ -1,6 +1,6 @@
 import time
 
-def cachedproperty(f):
+def lazy(f):
 
     def wrapper(self):
 
@@ -13,7 +13,7 @@ def cachedproperty(f):
             return return_value
 
     wrapper.__name__=f.__name__
-    return property(wrapper)
+    return wrapper
 
 
 

@@ -4,7 +4,8 @@ class Supplier(Object):
     listing_endpoint="/suppliers"
     endpoint="/suppliers/{guid}"
 
-    @cachedproperty
+    @property
+    @lazy
     def addresses(self):
         addresses= self._client.Listing(self._client.SupplierAddress, endpoint=f"/suppliers/{self.guid}/addresses")
         for address in addresses:
@@ -12,7 +13,8 @@ class Supplier(Object):
 
         return addresses
 
-    @cachedproperty
+    @property
+    @lazy
     def phones(self):
         phones= self._client.Listing(self._client.SupplierPhone, endpoint=f"/suppliers/{self.guid}/phonenumbers")
         for phone in phones:
@@ -20,11 +22,13 @@ class Supplier(Object):
 
         return phones
 
-    @cachedproperty
+    @property
+    @lazy
     def quality_processes(self):
         return self._client.Listing(self._client.QualityProcess, endpoint=f"/suppliers/{self.guid}/quality")
 
-    @cachedproperty
+    @property
+    @lazy
     def files(self):
         files=self._client.Listing(self._client.SupplierFileAssociation, endpoint=f"/suppliers/{self.guid}/files")
 
@@ -54,7 +58,8 @@ class SupplierFileAssociation(Object):
     def endpoint(self):
         return f"{self.listing_endpoint}/{self.guid}"
 
-    @cachedproperty
+    @property
+    @lazy
     def file(self):
         return self._client.File(self.__dict__["file"]["guid"])
 

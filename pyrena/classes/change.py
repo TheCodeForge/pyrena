@@ -4,7 +4,8 @@ class Change(Object):
     listing_endpoint="/changes"
     endpoint="/changes/{guid}"
 
-    @cachedproperty
+    @property
+    @lazy
     def file_associations(self):
         assocs = self._client.Listing(self._client.ChangeFileAssociation, endpoint=f"/changes/{self.guid}/files")
         for assoc in assocs:
@@ -30,14 +31,16 @@ class Change(Object):
 
         return self._client.ChangeFileAssociation(x.json())
 
-    @cachedproperty
+    @property
+    @lazy
     def item_associations(self):
         assocs = self._client.Listing(self._client.ChangeItemAssociation, endpoint=f"/changes/{self.guid}/items")
         for assoc in assocs:
             assoc.change=self
         return assocs
 
-    @cachedproperty
+    @property
+    @lazy
     def implementation_file_associations(self):
 
         files = self._client.Listing(self._client.ImplementationFileAssociation, endpoint=f"/changes/{self.guid}/implementationfiles")
@@ -95,7 +98,8 @@ class Change(Object):
 
 class ChangeFileAssociation(Object):
     
-    @cachedproperty
+    @property
+    @lazy
     def file(self):
         return self._client.File(self.__dict__['file']['guid'])
 
@@ -105,7 +109,8 @@ class ChangeFileAssociation(Object):
 
 class ChangeItemAssociation(Object):
     
-    @cachedproperty
+    @property
+    @lazy
     def item(self):
         return self._client.Item(self.__dict__['item']['guid'])
 
@@ -120,7 +125,8 @@ class ImplementationFileAssociation(Object):
     def endpoint(self):
         return f"/changes/{self.change.guid}/files/{self.guid}"
 
-    @cachedproperty
+    @property
+    @lazy
     def file(self):
         return self._client.File(self.__dict__['file']['guid'])
     
