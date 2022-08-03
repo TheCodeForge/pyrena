@@ -2,7 +2,7 @@ import setuptools
 
 setuptools.setup(
 	name="pyrena",
-	version="1.0.13",
+	version="1.0.14",
 	description="Python wrapper for Arena QMS API.",
 	url="https://github.com/thecodeforge/pyrena",
 	py_modules=["pyrena"],
