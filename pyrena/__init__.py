@@ -82,6 +82,9 @@ class Arena():
 
         try:
             obj= getattr(classes, name)
+
+            if not isinstance(obj, type):
+                raise(KeyError)
         except:
             try:
                 return self.__dict__[name]
