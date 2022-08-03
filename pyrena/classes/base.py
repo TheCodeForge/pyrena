@@ -57,7 +57,8 @@ class Object():
             if not self.endpoint:
                 raise ValueError(f"{self.__class__.__name__} objects cannot be directly obtained by GUID.")
 
-            self.endpoint=self.endpoint.format(guid=guid)
+            if not isinstance(self.endpoint, property):
+                self.endpoint=self.endpoint.format(guid=guid)
             
             data = self._client._get(self.endpoint)
 
@@ -66,7 +67,8 @@ class Object():
         elif kwargs:
             self.guid=guid
             self.__dict__.update(kwargs)
-            self.endpoint=self.__class__.__dict__.get('endpoint').format(guid=self.guid)
+            if not isinstance(self.__class__.__dict__.get('endpoint'), property):
+                self.endpoint=self.__class__.__dict__.get('endpoint').format(guid=self.guid)
 
         else:
             raise AttributeError("Must specify either `guid` or `**kwargs`")
