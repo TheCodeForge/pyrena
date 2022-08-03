@@ -4,18 +4,21 @@ class QualityProcess(Object):
     listing_endpoint = "/qualityprocesses"
     endpoint=listing_endpoint+"/{guid}"
 
-    @cachedproperty
+    @property
+    @lazy
     def template(self):
         return self._client.QualityProcessTemplate(self.__dict__["template"]["guid"])
 
-    @cachedproperty
+    @property
+    @lazy
     def steps(self):
         steps = self._client.Listing(self._client.QualityProcessStep, endpoint=f"/qualityprocesses/{self.guid}/steps")
         for step in steps:
             step.quality_process = self
         return steps
 
-    @cachedproperty
+    @property
+    @lazy
     def owner(self):
         return self._client.User(self.__dict__['owner']['guid'])
 
@@ -24,12 +27,14 @@ class QualityProcessNumberFormat(Object):
     endpoint=listing_endpoint+"/{guid}"
 
 class QualityProcessStep(Object):
-    
+  
+    @property  
     @property
     def endpoint(self):
         return f"/qualityprocess/{self.qualityprocess.guid}/steps/{self.guid}"
 
-    @cachedproperty
+    @property
+    @lazy
     def assignees(self):
         return [self._client.User(guid) for guid in [x['guid'] for x in self.__dict__['assignees']['users']]]
 
@@ -81,15 +86,18 @@ class QualityProcessTemplate(Object):
     listing_endpoint="/settings/qualityprocesses/templates"
     endpoint = listing_endpoint+"/{guid}"
 
-    @cachedproperty
+    @property
+    @lazy
     def number_formats(self):
         return [self._client.QualityProcessNumberFormat(**dataset) for dataset in  self.__dict__.get("numberFormats", [])]
 
-    @cachedproperty
+    @property
+    @lazy
     def default_number_format(self):
         return self._client.QualityProcessNumberFormat(self.__dict__['defaultNumberFormat']['guid'])
 
-    @cachedproperty
+    @property
+    @lazy
     def steps(self):
         steps=[self._client.QualityProcessTemplateStep(**dataset) for dataset in self.steps]
         for step in steps:
