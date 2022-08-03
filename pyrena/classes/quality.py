@@ -28,7 +28,6 @@ class QualityProcessNumberFormat(Object):
 
 class QualityProcessStep(Object):
   
-    @property  
     @property
     def endpoint(self):
         return f"/qualityprocess/{self.qualityprocess.guid}/steps/{self.guid}"
