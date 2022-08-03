@@ -35,7 +35,7 @@ class Arena():
         Creates the Arena client
 
         Optional arguments:
-        - base_url      - change the base URL. 
+        - base_url      - change the base URL. Set to `https://api.arenagov.com/v1/v1` for government users.
         - ssl_verify    - Use strict SSL verification in requests. May need to be set to False when accessing Arena from a corporate-controlled network.
         - user_agent    - Set a User-Agent header.
         - verbose       - Verbosely output API requests to console
@@ -140,6 +140,8 @@ class Arena():
         """
 
         self._put("/logout")
+        self.__dict__["_username"]=None
+        self.__dict__["_password"]=None
 
     def _fetch(self, method, endpoint, params={}, data={}, files={}, headers={}, **kwargs):
 
