@@ -174,7 +174,8 @@ class Object():
     def cache_key(self):
         return f"{self.__class__.__name__};{self.guid}"
 
-    @cachedproperty
+    @property
+    @lazy
     def user(self):
         return self._client.User(self.creator['guid'])
     
