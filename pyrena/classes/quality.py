@@ -30,7 +30,7 @@ class QualityProcessStep(Object):
   
     @property
     def endpoint(self):
-        return f"/qualityprocess/{self.quality_process.guid}/steps/{self.guid}"
+        return f"/qualityprocesses/{self.quality_process.guid}/steps/{self.guid}"
 
     @property
     @lazy

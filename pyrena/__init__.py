@@ -145,6 +145,10 @@ class Arena():
 
     def _fetch(self, method, endpoint, params={}, data={}, files={}, headers={}, **kwargs):
 
+        if not self._reqs_remaining:
+
+            raise ArenaHTTPError("Request limit of 25000/day reached.")
+
         #reauth 1 min before expiry
         if endpoint != "/login" and int(time.time())> self.reauth_utc:
             self.login()
