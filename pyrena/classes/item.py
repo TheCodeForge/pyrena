@@ -94,4 +94,4 @@ class ItemFileAssociation(Object):
         return f"/items/{self.change.guid}/files/{self.guid}"
 
 class ItemRevision(Object):
-    pass
+    endpoint = "/items/{guid}"
