@@ -53,7 +53,7 @@ class Object():
             if cache_key in OBJ_CACHE:
                 return
 
-            self.endpoint=self.__class__.__dict__.get('endpoint')
+            self.endpoint=getattr(self.__class__, 'endpoint')
             if not self.endpoint:
                 raise ValueError(f"{self.__class__.__name__} objects cannot be directly obtained by GUID.")
 
@@ -65,10 +65,10 @@ class Object():
             self.__dict__.update(data)
 
         elif kwargs:
-            self.guid=guid
+            self.guid=kwargs.get('guid')
             self.__dict__.update(kwargs)
             if not isinstance(self.__class__.__dict__.get('endpoint'), property):
-                self.endpoint=self.__class__.__dict__.get('endpoint').format(guid=self.guid)
+                self.endpoint=getattr(self.__class__, 'endpoint').format(guid=self.guid)
 
         else:
             raise AttributeError("Must specify either `guid` or `**kwargs`")
@@ -98,15 +98,22 @@ class Object():
     def __eq__(self, other):
         return self.__repr__==other.__repr__
 
-    # def __getattr__(self, name):
+    def __getattr__(self, name):
 
-    #     # "2018-06-01T06:59:59Z"
-    #     if name.endswith("_utc"):
-    #         target_name=f"{name.split('_utc')[0]}DateTime"
-    #         target_time=self.__dict__[target_name]
-    #         return int(time.mktime(time.strptime(self.__dict__[target_name], "%Y-%m-%dT%H:%M:%SZ")))
+        # "2018-06-01T06:59:59Z"
+        if name.endswith("_utc"):
+            target_name=f"{name.split('_utc')[0]}DateTime"
+            if target_name in self.__dict__:
+                target_time=self.__dict__[target_name]
+                return int(time.mktime(time.strptime(self.__dict__[target_name], "%Y-%m-%dT%H:%M:%SZ")))
+            else:
+                raise AttributeError(f"'{self.__class__.__name__}' object has no attribute '{name}'")
+        elif name in dir(self):
+            return getattr(self, name)
+        else:
+            raise AttributeError(f"'{self.__class__.__name__}' object has no attribute '{name}'")
 
-    #     return self.__dict__[name]
+        return self.__dict__[name]
 
 
 
