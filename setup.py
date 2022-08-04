@@ -1,5 +1,8 @@
 import setuptools
 
+with open("README.md", "r") as file:
+	readme = file.read()
+
 setuptools.setup(
 	name="pyrena",
 	version="1.0.16",
@@ -13,5 +16,7 @@ setuptools.setup(
 	packages=setuptools.find_packages(),
 	package_dir={
 		"pyrena":"pyrena"
-	}
+	},
+	long_description = readme,
+	long_description_content_type = "text/markdown"
 )
