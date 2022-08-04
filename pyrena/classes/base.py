@@ -108,14 +108,12 @@ class Object():
                 return int(time.mktime(time.strptime(self.__dict__[target_name], "%Y-%m-%dT%H:%M:%SZ")))
             else:
                 raise AttributeError(f"'{self.__class__.__name__}' object has no attribute '{name}'")
-        elif name in dir(self):
+        elif name in self.__dict__:
+            return self.__dict__[name]
+        elif name in dir(self)
             return getattr(self, name)
         else:
             raise AttributeError(f"'{self.__class__.__name__}' object has no attribute '{name}'")
-
-        return self.__dict__[name]
-
-
 
     def refresh(self, value=None):
         """
