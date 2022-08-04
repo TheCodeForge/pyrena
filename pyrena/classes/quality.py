@@ -132,7 +132,7 @@ class QualityProcessTemplate(Object):
     @property
     @lazy
     def steps(self):
-        steps=[self._client.QualityProcessTemplateStep(**dataset) for dataset in self.steps]
+        steps=[self._client.QualityProcessTemplateStep(**dataset) for dataset in self.__dict__['steps']]
         for step in steps:
             step.template=self
 
