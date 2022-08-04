@@ -5,7 +5,7 @@ with open("README.md", "r") as file:
 
 setuptools.setup(
 	name="pyrena",
-	version="1.0.29",
+	version="1.0.30",
 	description="Python wrapper for Arena QMS API.",
 	url="https://github.com/thecodeforge/pyrena",
 	py_modules=["pyrena"],
