@@ -84,6 +84,14 @@ class QualityProcessStep(Object):
     @property
     @lazy
     def attributes(self):
+
+        #Arena only reports steps with data so let's fill in all from template
+        #get the same number step; attributes are thankfully in order
+        attrs_list = self.quality_process.template.steps[self.quality_process.steps.index(self)].attributes
+
+        construct 
+
+
         attrs = [self._client.QualityProcessAttribute(**kwargs) for kwargs in self.__dict__['attributes']]
         for attr in attrs:
             attr.quality_process_step = self
@@ -137,6 +145,43 @@ class QualityProcessTemplate(Object):
             step.template=self
 
         return steps
+
+    def new(self, title, description=None, owner=None, number_format=None):
+
+        """
+        Create a new Quality record from this template.
+
+        Required arguments:
+
+        - title     - The title of the new quality record
+
+        Optional arguments:
+
+        - description       - The description of the new record
+        - owner             - a User object representing the owner of the new record. Defaults to the authenticated User if not specified.
+        - number_format     - a NumberFormat object representing the numbering sequence to use. Defaults to the Template's assigned default sequence if not specified.
+
+        Returns: QualityProcess object
+        """
+
+        {  
+           "description":description or "",
+           "name":name,
+           "owner":{  
+              "guid": owner.guid if owner else self._client.me.guid
+           },
+           "template":{  
+              "guid": self.guid,
+              "numberFormat":{  
+                 "prefix":{  
+                    "guid": number_format.guid if number_format else self.__dict__['defaultNumberFormat']['guid'] 
+                 }
+              }
+           },
+           "type":""
+        }
+
+
 
 class QualityProcessTemplateStep(Object):
     pass

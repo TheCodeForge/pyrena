@@ -14,19 +14,6 @@ import pyrena.classes as classes
 class ArenaHTTPError(Exception):
     pass
 
-def disable (f):
-    def wrapper(*args, **kwargs):
-        self=args[0]
-        endpoint=args[1]
-
-        if endpoint not in ["/login","/logout"]:
-            raise AttributeError(f"Function {self.__class__.__name__}.{f.__name__} is currently disabled")
-
-        return f(*args, **kwargs)
-
-    wrapper.__name__=f.__name__
-    return wrapper
-
 class Arena():
 
     def __init__(self, username=None, password=None, base_url="https://api.arenasolutions.com/v1", ssl_verify=True, user_agent="Python Pyrena", verbose=False):
@@ -142,11 +129,11 @@ class Arena():
         self._put("/logout")
         self.__dict__["_username"]=None
         self.__dict__["_password"]=None
+        self.__dict__["me"]=None
 
     def _fetch(self, method, endpoint, params={}, data={}, files={}, headers={}, **kwargs):
 
         if not self._reqs_remaining:
-
             raise ArenaHTTPError("Request limit of 25000/day reached.")
 
         #reauth 1 min before expiry
@@ -311,6 +298,20 @@ class Arena():
             classes.OBJ_CACHE={}
 
         return True
+
+
+    @property
+    def me(self):
+
+        """
+        Returns the currently authenticated User
+        """
+
+        if self.__dict__.get("me"):
+            return self.__dict__[me]
+        else:
+            self.__dict__['me']=self.Listing(self.User, email=self.__dict__['_username'])[0]
+            return self.__dict__[me]
 
 
 def docs():
