@@ -68,7 +68,8 @@ class Object():
             self.guid=guid
             self.__dict__.update(kwargs)
             if not isinstance(self.__class__.__dict__.get('endpoint'), property):
-                self.endpoint=getattr(self.__class__, 'endpoint').format(guid=self.guid)
+                if "endpoint" in dir(self.__class__):
+                    self.endpoint=getattr(self.__class__, 'endpoint').format(guid=self.guid)
 
         else:
             raise AttributeError("Must specify either `guid` or `**kwargs`")
@@ -111,7 +112,7 @@ class Object():
         elif name in self.__dict__:
             return self.__dict__[name]
         elif name in dir(self):
-            return getattr(self.__class__, name)
+            return getattr(self.__class__, name).fget(self)
         else:
             raise AttributeError(f"'{self.__class__.__name__}' object has no attribute '{name}'")
 
