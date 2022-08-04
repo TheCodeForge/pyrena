@@ -45,7 +45,7 @@ class QualityProcessStep(Object):
 
         data={  
            "Quality Process":{
-               "guid":self.qualityprocess.guid,
+               "guid":self.quality_process.guid,
                "step": {
                    "guid": self.guid
                }
@@ -67,7 +67,7 @@ class QualityProcessStep(Object):
 
         data={  
            "Quality Process":{
-               "guid":self.qualityprocess.guid,
+               "guid":self.quality_process.guid,
                "step": {
                    "guid": self.guid
                }
@@ -84,7 +84,7 @@ class QualityProcessStep(Object):
     @property
     @lazy
     def attributes(self):
-        attrs = [self._client.QualityProcessAttribute(**kwargs) for kwargs in self.__dict__]
+        attrs = [self._client.QualityProcessAttribute(**kwargs) for kwargs in self.__dict__['attributes']]
         for attr in attrs:
             attr.quality_process_step = self
         return attrs
