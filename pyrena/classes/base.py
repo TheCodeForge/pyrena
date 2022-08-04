@@ -110,7 +110,7 @@ class Object():
                 raise AttributeError(f"'{self.__class__.__name__}' object has no attribute '{name}'")
         elif name in self.__dict__:
             return self.__dict__[name]
-        elif name in dir(self)
+        elif name in dir(self):
             return getattr(self, name)
         else:
             raise AttributeError(f"'{self.__class__.__name__}' object has no attribute '{name}'")
