@@ -84,7 +84,7 @@ class QualityProcessStep(Object):
     @property
     @lazy
     def attributes(self):
-        attrs = [self._client.QualityProcessAttribute(**kwargs) for kwargs in self.__dict__[]
+        attrs = [self._client.QualityProcessAttribute(**kwargs) for kwargs in self.__dict__[]]
         for step in steps:
             step.quality_process = self
         return attrs
