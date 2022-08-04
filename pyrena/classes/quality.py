@@ -79,7 +79,15 @@ class QualityProcessStep(Object):
         return self._client._post(
             f"/qualityprocess/statuschanges",
             data=data
-            )  
+            )
+
+    @property
+    @lazy
+    def attributes(self):
+        attrs = [self._client.QualityProcessAttribute(**kwargs) for kwargs in self.__dict__[]
+        for step in steps:
+            step.quality_process = self
+        return attrs
 
 class QualityProcessTemplate(Object):
     listing_endpoint="/settings/qualityprocesses/templates"
@@ -102,9 +110,11 @@ class QualityProcessTemplate(Object):
         for step in steps:
             step.template=self
 
+        return steps
+
 class QualityProcessTemplateStep(Object):
     pass
 
-class QualityAttribute(Object):
-
-    listing_endpoint="/settings/quality/attributes"
+class QualityProcessAttribute(Object):
+    
+    def update(self, value)
