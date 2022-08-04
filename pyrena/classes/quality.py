@@ -54,8 +54,8 @@ class QualityProcessStep(Object):
            "comment":comment
         }
 
-        return self._client._post(
-            f"/qualityprocess/statuschanges",
+        return self.quality_process._client._post(
+            self.endpoint,
             data=data
             )
           
@@ -76,7 +76,7 @@ class QualityProcessStep(Object):
            "comment":comment
         }
 
-        return self._client._post(
+        return self.quality_process._client._put(
             f"/qualityprocess/statuschanges",
             data=data
             )
@@ -85,9 +85,35 @@ class QualityProcessStep(Object):
     @lazy
     def attributes(self):
         attrs = [self._client.QualityProcessAttribute(**kwargs) for kwargs in self.__dict__]
-        for step in steps:
-            step.quality_process = self
+        for attr in attrs:
+            attr.quality_process_step = self
         return attrs
+
+    def assign(self, user):
+
+        """
+        Set the step assignee.
+
+        Required arguments:
+
+        - user    - a User object
+        """
+
+        data={
+            "assignees":{
+                "users":[
+                    {
+                        "guid": user.guid
+                    }
+                ]
+            }
+        }
+
+        return self.quality_process._client._put(
+            self.endpoint,
+            data=data
+            )
+
 
 class QualityProcessTemplate(Object):
     listing_endpoint="/settings/qualityprocesses/templates"
@@ -117,4 +143,22 @@ class QualityProcessTemplateStep(Object):
 
 class QualityProcessAttribute(Object):
     
-    def update(self, value)
+    def update(self, value):
+
+        """
+        Set the value of the attribute within the quality process.
+        """
+
+        data={
+            "attributes":[
+                {
+                    "guid":self.guid,
+                    "value": value
+                }
+            ]
+        }
+
+        return self._client._put(
+            self.quality_process_step.endpoint,
+            data=data
+            )
