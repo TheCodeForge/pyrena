@@ -165,8 +165,7 @@ class Arena():
                 verify=self.ssl_verify,
                 )
         except requests.exceptions.SSLError:
-            print("Unable to establish a secure connection to Arena. Use a different internet connection or use `ssl_verify=False` to allow insecure requests.")
-            return
+            raise requests.exceptions.SSLError("Unable to establish a secure connection to Arena. Use a different internet connection or use `ssl_verify=False` to allow insecure requests.")
 
         if self._debug:
             print(f"{method.upper()} {endpoint} - {req.status_code}")
