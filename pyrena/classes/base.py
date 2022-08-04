@@ -111,7 +111,7 @@ class Object():
         elif name in self.__dict__:
             return self.__dict__[name]
         elif name in dir(self):
-            return getattr(self, name)
+            return getattr(self.__class__, name)
         else:
             raise AttributeError(f"'{self.__class__.__name__}' object has no attribute '{name}'")
 
