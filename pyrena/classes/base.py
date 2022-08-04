@@ -65,7 +65,7 @@ class Object():
             self.__dict__.update(data)
 
         elif kwargs:
-            self.guid=kwargs.get('guid')
+            self.guid=guid
             self.__dict__.update(kwargs)
             if not isinstance(self.__class__.__dict__.get('endpoint'), property):
                 self.endpoint=getattr(self.__class__, 'endpoint').format(guid=self.guid)

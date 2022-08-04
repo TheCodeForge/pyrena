@@ -29,7 +29,7 @@ def disable (f):
 
 class Arena():
 
-    def __init__(self, username=None, password=None, base_url="https://api.arenasolutions.com/v1", ssl_verify=True, user_agent="Python Requests", verbose=False):
+    def __init__(self, username=None, password=None, base_url="https://api.arenasolutions.com/v1", ssl_verify=True, user_agent="Python Pyrena", verbose=False):
 
         """
         Creates the Arena client
