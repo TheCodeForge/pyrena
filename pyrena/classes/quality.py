@@ -167,7 +167,7 @@ class QualityProcessTemplate(Object):
 
         {  
            "description":description or "",
-           "name":name,
+           "name":title,
            "owner":{  
               "guid": owner.guid if owner else self._client.me.guid
            },
