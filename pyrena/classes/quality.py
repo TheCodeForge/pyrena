@@ -168,11 +168,11 @@ class QualityProcessTemplate(Object):
         number_format = number_format or self.default_number_format
 
         if len(number_format.prefixes)>1 and not prefix:
-            raise ValueError(f"Selected number format has multiple prefixes. Add a `prefix` argument with one of the following values: \"{'\", \"'.join([x['value'] for x in number_format.prefixes])}\"")
+            raise ValueError(f"Selected number format has multiple prefixes. Add a `prefix` argument with one of the following values: `{'`, `'.join([x['value'] for x in number_format.prefixes])}`)
         elif len(number_format.prefixes)>1:
             prefix_dict = {x["value"]: x["guid"] for x in number_format.prefixes}
             if prefix not in prefix_dict:
-                raise ValueError(f"`prefix` must be one of the following for this numbering format: \"{'\", \"'.join([x['value'] for x in number_format.prefixes])}\"")
+                raise ValueError(f"`prefix` must be one of the following for this numbering format: `{'`, `'.join([x['value'] for x in number_format.prefixes])}`)
             prefix_id=prefix_dict[prefix]
         else:
             prefix_id=number_format.prefixes[0]["guid"]
