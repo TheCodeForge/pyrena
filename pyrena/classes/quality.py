@@ -160,7 +160,8 @@ class QualityProcessTemplate(Object):
 
         - description       - The description of the new record
         - owner             - a User object representing the owner of the new record. Defaults to the authenticated User if not specified.
-        - number_format     - a NumberFormat object representing the numbering sequence to use. Defaults to the Template's assigned default sequence if not specified.
+        - number_format     - a NumberFormat object representing the numbering sequence to use. Defaults to the Template's assigned default sequence (if any) if not specified.
+        - prefix            - a string to specify which numbering prefix to use. Required if the number format has more than one prefix option.
 
         Returns: QualityProcess object
         """
