@@ -171,7 +171,10 @@ class Arena():
         #update reqs remaining
         self._reqs_remaining = req.headers.get("X-Arena-Requests-Remaining", self._reqs_remaining)
 
-        return req.json()
+        if method.lower()=="delete":
+            return
+        else:
+            return req.json()
 
     def _get(self, endpoint, params={}, **kwargs):
         return self._fetch("get", endpoint, params=params, **kwargs)
@@ -186,7 +189,7 @@ class Arena():
 
     #@disable
     def _delete(self, endpoint, data={}, **kwargs):
-        return self._fetch("delete", endpoint, data=data, **kwargs)
+        self._fetch("delete", endpoint, data=data, **kwargs)
 
     def Listing(self, obj, endpoint=None, limit=400, offset=0,  **kwargs):
 

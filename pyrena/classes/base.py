@@ -174,9 +174,7 @@ class Object():
         """
         Deletes the object in Arena.
         """
-        data= self._client._delete(self.endpoint)
-
-        self.__dict__.update(data)
+        self._client._delete(self.endpoint)
 
     def reload(self):
         """
