@@ -159,20 +159,18 @@ class Object():
         if "endpoint" in dir(self.__class__):
             self.endpoint=getattr(self.__class__, 'endpoint').format(guid=self.guid)
 
-    def update(self, data=None):
+    def update(self, **data):
         """
         Updates the object properties in Arena based on attributes passed in.
 
         Required arguments:
 
-        - data - A dictionary of object properties to update
+        - **data - Object properties to update. Use attribute GUIDs to update custom attributes.
         """
 
-        data=data or self.__dict__
+        response = self._client._put(self.endpoint, data)
 
-        data= self._client._put(self.endpoint, data)
-
-        self.__dict__.update(data)
+        self.__dict__.update(response)
 
     def delete(self):
         """
