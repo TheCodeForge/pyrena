@@ -151,9 +151,9 @@ class Object():
         ]
         data = {x: self.__dict__[x] for x in self.__dict__ if (x not in strip_endpoints and not x.startswith('_'))}
 
-        data= self._client._post(self.__class__.listing_endpoint, data=self.__dict__)
+        response= self._client._post(self.__class__.listing_endpoint, data=data)
 
-        self.__dict__.update(data)
+        self.__dict__.update(response)
 
     def update(self, data=None):
         """
