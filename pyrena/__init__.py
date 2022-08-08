@@ -248,7 +248,7 @@ class Arena():
     def Stream(self, obj, endpoint=None, limit=400, offset=0, delay=60, **kwargs):
 
         """
-        Similar to Listing, but yields live results without end. Does not yield pre-existing content.
+        Similar to Listing, but works as a generator that yields live results without end. Does not yield pre-existing content.
 
         Required arguments:
         - obj       - Object class to aquire. For example, client.QualityProcess
