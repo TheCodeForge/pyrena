@@ -16,21 +16,23 @@ class ArenaHTTPError(Exception):
 
 class Arena():
 
-    def __init__(self, username=None, password=None, base_url="https://api.arenasolutions.com/v1", ssl_verify=True, user_agent="Python Pyrena", verbose=False):
+    def __init__(self, username=None, password=None, ssl_verify=True, user_agent="Python Pyrena", verbose=False, arenagov=False):
 
         """
         Creates the Arena client
 
         Optional arguments:
-        - base_url      - change the base URL. Set to `https://api.arenagov.com/v1/v1` for government users.
+        - arenagov      - Set to True for accessing workspaces located on app.arenagov.com. Defaults to False for workspaces located on app.bom.com.
         - ssl_verify    - Use strict SSL verification in requests. May need to be set to False when accessing Arena from a corporate-controlled network.
         - user_agent    - Set a User-Agent header.
         - verbose       - Verbosely output API requests to console
         """
 
         #set properties
-        self.base_url = base_url
+        self.base_url = "https://api.arenagov.com/v1/v1" if arenagov else "https://api.arenasolutions.com/v1"
+        self.browser_url = "https://app.arenagov.com/" if arenagov else "https://app.bom.com"
         self.ssl_verify = ssl_verify
+
 
         #if ssl_verify is false, disable insecure http warnings
         if not ssl_verify:
@@ -191,10 +193,10 @@ class Arena():
     def _delete(self, endpoint, data={}, **kwargs):
         self._fetch("delete", endpoint, data=data, **kwargs)
 
-    def Listing(self, obj, endpoint=None, limit=400, offset=0,  **kwargs):
+    def Listing(self, obj, endpoint=None, limit=400, offset=0, **kwargs):
 
         '''
-        Obtains a listing of objects
+        Obtains a listing of objects using Arena's search feature.
 
         Required arguments:
         - obj       - Object class to aquire. For example, client.QualityProcess
@@ -203,6 +205,7 @@ class Arena():
         - endpoint  - The endpoint to use. Defaults to obj.listing_endpoint property
         - limit     - The maximum number to fetch. Defaults to 400, the maximum number of objects that may be returned by one Arena API call.
         - offset    - Offset for result returns. Defaults to 0 (no offset). Mainly used in recursive pagination calls.
+        - **kwargs  - Property arguments for search parameters.
         '''
 
         if isinstance(obj, str):

@@ -1,4 +1,5 @@
 import time
+import webbrowser
 
 def lazy(f):
 
@@ -186,6 +187,12 @@ class Object():
 
         data = self._client._get(self.endpoint)
         self.__dict__.update(data)
+
+    def open(self):
+        """
+        Open the object in the browser. Requires also being logged into Arena in the default web browser.
+        """
+        webbrowser.open(f"{self._client.browser_url}{self.guid}")
 
     @property
     def cache_key(self):
