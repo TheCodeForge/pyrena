@@ -165,7 +165,7 @@ class QualityProcessTemplate(Object):
         Returns: QualityProcess object
         """
 
-        {  
+        data = {  
            "description":description or "",
            "name":title,
            "owner":{  
@@ -181,6 +181,10 @@ class QualityProcessTemplate(Object):
            },
            "type":""
         }
+
+        new_qp = self._client.QualityProcess(**data)
+        new_qp.create()
+        return new_qp
 
 
 
