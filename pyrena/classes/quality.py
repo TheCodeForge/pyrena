@@ -165,6 +165,9 @@ class QualityProcessTemplate(Object):
         Returns: QualityProcess object
         """
 
+        if not self.active:
+            raise RuntimeError("Cannot create new instance of inactive Quality Process Template.")
+
         number_format = number_format or self.default_number_format
 
         if len(number_format.prefixes)>1 and not prefix:
