@@ -155,6 +155,9 @@ class Object():
 
         self.__dict__.update(response)
 
+        if "endpoint" in dir(self.__class__):
+            self.endpoint=getattr(self.__class__, 'endpoint').format(guid=self.guid)
+
     def update(self, data=None):
         """
         Updates the object properties in Arena based on attributes passed in.
