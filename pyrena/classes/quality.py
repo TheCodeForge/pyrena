@@ -126,6 +126,7 @@ class QualityProcessStep(Object):
 class QualityProcessTemplate(Object):
     listing_endpoint="/settings/qualityprocesses/templates"
     endpoint = listing_endpoint+"/{guid}"
+    _can_paginate = False
 
     @property
     @lazy
