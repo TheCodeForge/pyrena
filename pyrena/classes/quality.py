@@ -167,7 +167,7 @@ class QualityProcessTemplate(Object):
         """
 
         if not self.active:
-            raise RuntimeError("Cannot create new instance of inactive Quality Process Template.")
+            raise RuntimeError(f"Cannot create new instance of inactive Quality Process Template `{self.name}`.")
 
         number_format = number_format or self.default_number_format
 
