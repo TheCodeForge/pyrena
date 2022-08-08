@@ -69,16 +69,17 @@ class Arena():
         if name in ['username', '_username', 'password', '_password']:
             raise AttributeError
 
-        try:
-            obj= getattr(classes, name)
+        obj = getattr(classes, name, None)
 
-            if not isinstance(obj, type):
-                raise(KeyError)
-        except:
-            try:
-                return self.__dict__[name]
-            except KeyError:
-                raise AttributeError
+        if not obj and name in self.__dict__:
+            return self.__dict__[name]
+        elif not obj:
+            raise AttributeError
+
+        if obj and not isinstance(obj, type):
+            raise AttributeError
+        elif not obj:
+            raise AttributeError
 
         obj._client=self
 
