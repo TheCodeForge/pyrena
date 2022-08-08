@@ -144,15 +144,12 @@ class Object():
         if self.__dict__.get("guid"):
             raise ValueError(f"This {self.__class__.__name__} has already been created")
 
-        data = self.__dict__
         strip_endpoints = [
             "endpoint",
             "guid",
             "listing_endpoint",
         ]
-        for key in self.__dict__:
-            if key.startswith('_') or key in strip_endpoints:
-                data.pop(key, None)
+        data = {x: self.__dict__[x] for x in self.__dict__ if (x not in strip_endpoints and not x.startswith('_'))}
 
         data= self._client._post(self.__class__.listing_endpoint, data=self.__dict__)
 
