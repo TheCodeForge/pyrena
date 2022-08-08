@@ -30,7 +30,7 @@ class Arena():
 
         #set properties
         self.base_url = "https://api.arenagov.com/v1/v1" if arenagov else "https://api.arenasolutions.com/v1"
-        self.browser_url = "https://app.arenagov.com/" if arenagov else "https://app.bom.com"
+        self.browser_url = "https://app.arenagov.com/" if arenagov else "https://app.bom.com/"
         self.ssl_verify = ssl_verify
 
 
