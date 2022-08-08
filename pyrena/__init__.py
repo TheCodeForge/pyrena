@@ -308,10 +308,10 @@ class Arena():
         """
 
         if self.__dict__.get("me"):
-            return self.__dict__[me]
+            return self.__dict__['me']
         else:
             self.__dict__['me']=self.Listing(self.User, email=self.__dict__['_username'])[0]
-            return self.__dict__[me]
+            return self.__dict__['me']
 
 
 def docs():
