@@ -1,6 +1,6 @@
 from .base import *
 
-class Change(Object):
+class Change(Object, openable_mixin):
     listing_endpoint="/changes"
     endpoint="/changes/{guid}"
 

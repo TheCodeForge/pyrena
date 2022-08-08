@@ -1,6 +1,6 @@
 from .base import *
 
-class File(Object):
+class File(Object, openable_mixin):
     listing_endpoint="/files"
     endpoint="/files/{guid}"
 
@@ -19,12 +19,13 @@ class File(Object):
         """
 
         with open(filename, "r+") as file:
-            self._client._post(
+            data=self._client._post(
                 f"{self.endpoint}/content",
                 files={
                     'content':file
                     }
                 )
+        self.__dict__.update(data)
 
     def check_out(self, comment="Checking out for review"):
         """
@@ -38,10 +39,11 @@ class File(Object):
                 "guid":self.guid
             }
         }
-        return self._client._post(
+        data = self._client._post(
             "/files/checkoutstatuschanges",
             data=data
             )
+        self.__dict__.update(data)
 
     def cancel_check_out(self, comment="Cancelling file checkout"):
 
@@ -56,10 +58,12 @@ class File(Object):
                 "guid":self.guid
             }
         }
-        return self._client._post(
+        data= self._client._post(
             "/files/checkoutstatuschanges",
             data=data
             )
+
+        self.__dict__.update(data)
 
     def check_in(self, filename, comment="Checking in for update"):
 
@@ -78,13 +82,13 @@ class File(Object):
                 "newEdition":True
             }
 
-            returnval= self._client._post(
+            data= self._client._post(
                 "/files/checkoutstatuschanges",
                 data=data,
                 files=files
                 )
 
-        return returnval
+        self.__dict__.update(data)
 
     @property
     @lazy

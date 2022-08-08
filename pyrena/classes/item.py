@@ -1,6 +1,6 @@
 from .base import *
 
-class Item(Object):
+class Item(Object, openable_mixin):
     listing_endpoint="/items"
     endpoint="/items/{guid}"
 
@@ -93,5 +93,5 @@ class ItemFileAssociation(Object):
     def endpoint(self):
         return f"/items/{self.change.guid}/files/{self.guid}"
 
-class ItemRevision(Object):
+class ItemRevision(Object, openable_mixin):
     endpoint = "/items/{guid}"

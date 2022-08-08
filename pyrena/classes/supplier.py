@@ -1,6 +1,6 @@
 from .base import *
 
-class Supplier(Object):
+class Supplier(Object, openable_mixin):
     listing_endpoint="/suppliers"
     endpoint="/suppliers/{guid}"
 

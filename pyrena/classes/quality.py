@@ -1,6 +1,6 @@
 from .base import *
 
-class QualityProcess(Object):
+class QualityProcess(Object, openable_mixin):
     listing_endpoint = "/qualityprocesses"
     endpoint=listing_endpoint+"/{guid}"
 
