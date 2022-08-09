@@ -39,8 +39,65 @@ class TrainingPlan(Object):
     def item_associations(self):
         assocs = self._client.Listing(self._client.TrainingPlanItem, endpoint=f"/trainingplans/{self.guid}/items")
         for assoc in assocs:
-            assoc.change=self
+            assoc.training_plan=self
         return assocs
+
+    @property
+    @lazy
+    def records(self):
+        recs = self._client.Listing(self._client.TrainingPlanRecord, endpoint=f"/trainingplans/{self.guid}/records")
+        for rec in recs:
+            rec.training_plan=self
+        return recs
+
+    def add_item(self, item):
+
+        """
+        Add Item to the training plan
+
+        Required argument:
+
+        - item      - an Item object
+
+        Returns: TrainingPlanItem object
+        """
+
+        data={
+            "item": {
+                "guid": item.guid
+            }
+        }
+
+        response=self._client._post(f"/trainingplans/{self.guid}/items", data=data)
+
+        i= self._client.TrainingPlanItem(**response)
+        i.training_plan=self
+        return i
+
+    def add_user(self, user):
+
+        """
+        Add User to the training plan
+
+        Required argument:
+
+        - user      - a User object
+
+        Returns: TrainingPlanUser object
+        """
+
+        data={
+            "user": {
+                "guid": user.guid
+            }
+        }
+
+        response=self._client._post(f"/trainingplans/{self.guid}/users", data=data)
+
+        i= self._client.TrainingPlanUser(**response)
+        i.training_plan=self
+        return i
+
 
 class TrainingPlanItem(Object):
     
@@ -51,4 +108,27 @@ class TrainingPlanItem(Object):
 
     @property
     def endpoint(self):
-        return f"/trainingplans/{self.ticket.guid}/items/{self.guid}"
+        return f"/trainingplans/{self.training_plan.guid}/items/{self.guid}"
+
+class TrainingPlanUser(Object):
+    
+    @property
+    @lazy
+    def user(self):
+        return self._client.User(self.__dict__['user']['guid'])
+
+    @property
+    def endpoint(self):
+        return f"/trainingplans/{self.training_plan.guid}/users/{self.guid}"
+
+class TrainingPlanRecord(Object):
+
+    @property
+    def endpoint(self):
+        return f"/trainingplans/{self.training_plan.guid}/records/{self.guid}"
+
+    @property
+    @lazy
+    def item(self):
+        return self._client.Item(self.__dict__['item']['guid'])
+    
