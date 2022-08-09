@@ -131,6 +131,8 @@ class TrainingPlanUser(Object):
 
 class TrainingPlanRecord(Object):
 
+    _can_paginate=False
+
     @property
     def endpoint(self):
         return f"/trainingplans/{self.training_plan.guid}/records/{self.guid}"
