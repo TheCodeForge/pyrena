@@ -152,7 +152,16 @@ class Object():
             "guid",
             "listing_endpoint",
         ]
-        data = {x: self.__dict__[x] for x in self.__dict__ if (x not in strip_endpoints and not x.startswith('_'))}
+
+        def process_values(x):
+
+            if isinstance(x, Object):
+                return {"guid":x.guid}
+            else:
+                return x
+
+
+        data = {x: process_values(self.__dict__[x]) for x in self.__dict__ if (x not in strip_endpoints and not x.startswith('_'))}
 
         response= self._client._post(self.__class__.listing_endpoint, data=data)
 
