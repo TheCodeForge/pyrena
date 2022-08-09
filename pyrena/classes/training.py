@@ -1,4 +1,4 @@
-from base import *
+from .base import *
 
 class TrainingPlan(Object):
     listing_endpoint = "/trainingplans"
