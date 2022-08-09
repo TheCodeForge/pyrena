@@ -11,12 +11,12 @@ class Ticket(Object):
 
         Required argument:
 
-        - status - one of `NOT_STARTED`, `IN_PROGRESS`, or `COMPLETE`
+        - status - one of "NOT_STARTED", "IN_PROGRESS", or "COMPLETE"
         """
 
         if status not in ['NOT_STARTED', 'IN_PROGRESS', 'COMPLETE']:
 
-            raise ValueError("`status` must be one of `NOT_STARTED`, `IN_PROGRESS`, or `COMPLETE`.")
+            raise ValueError("`status` must be one of \"NOT_STARTED\", \"IN_PROGRESS\", or \"COMPLETE\".")
 
         body={
             "ticket": {
@@ -25,7 +25,7 @@ class Ticket(Object):
             "status": status
         }
 
-        x=self._client._post("/tickets", data=body)
+        x=self._client._post("/tickets/statuschanges", data=body)
 
         self.__dict__.update(x.json())
 

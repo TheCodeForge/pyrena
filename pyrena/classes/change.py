@@ -54,11 +54,11 @@ class Change(Object, openable_mixin):
         """
         Add Item revision to Change.
 
-        Args:
+        Required arguments:
 
         * item_obj - An Item object. The working revision will be selected.
 
-        Kwargs:
+        Optional arguments:
 
         * lifecycle_phase - An ItemLifecyclePhase object. Defaults to `item_obj.lifecycle_phase` if not specified
         """

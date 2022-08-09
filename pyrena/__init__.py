@@ -207,6 +207,8 @@ class Arena():
         - limit     - The maximum number to fetch. Defaults to 400, the maximum number of objects that may be returned by one Arena API call.
         - offset    - Offset for result returns. Defaults to 0 (no offset). Mainly used in recursive pagination calls.
         - **kwargs  - Property arguments for search parameters.
+
+        Returns: List of objects
         '''
 
         if isinstance(obj, str):
@@ -265,6 +267,8 @@ class Arena():
         - limit     - The maximum number to fetch. Defaults to 400, the maximum number of objects that may be returned by one Arena API call.
         - offset    - Offset for result returns. Defaults to 0 (no offset). Mainly used in recursive pagination calls.
         - delay     - Time to sleep (in seconds) between API calls.
+
+        Yields objects
         """
 
         initial = self.Listing(obj, endpoint, limit, offset, **kwargs)

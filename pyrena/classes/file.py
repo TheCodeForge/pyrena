@@ -30,6 +30,10 @@ class File(Object, openable_mixin):
     def check_out(self, comment="Checking out for review"):
         """
         Checks out the File for edits
+
+        Optional arguments:
+
+        - comment   -Comment string to attach in the history log.
         """
 
         data={
@@ -49,6 +53,10 @@ class File(Object, openable_mixin):
 
         """
         Reverts File to "Checked In" state.
+
+        Optional arguments:
+
+        - comment   -Comment string to attach in the history log.
         """
 
         data={
@@ -69,6 +77,10 @@ class File(Object, openable_mixin):
 
         """
         Upload and check in new version of file to replace existing version.
+
+        Optional arguments:
+
+        - comment   -Comment string to attach in the history log.
         """
 
         with open(filename, "r+") as file:
