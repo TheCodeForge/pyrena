@@ -109,9 +109,6 @@ class TrainingPlan(Object):
 
 class TrainingPlanItem(Object):
 
-    def __repr__(self):
-
-    
     @property
     @lazy
     def item(self):
