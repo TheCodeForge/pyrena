@@ -86,10 +86,12 @@ class Object():
             return f"<{self.__class__.__name__}(id={self.guid})>"
 
         else:
-            if self.__dict__.get("number"):
+            if "number" in self.__dict__:
                 return f"<{self.__class__.__name__}(number={self.number})>"
-            else:
+            elif "name" in self.__dict__:
                 return f"<{self.__class__.__name__}(name={self.name})>"
+            else:
+                return f"<{self.__class__.__name__}(id={self.guid})>"
 
     def __str__(self):
         if "name" in self.__dict__:

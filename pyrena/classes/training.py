@@ -44,6 +44,14 @@ class TrainingPlan(Object):
 
     @property
     @lazy
+    def user_associations(self):
+        assocs = self._client.Listing(self._client.TrainingPlanUser, endpoint=f"/trainingplans/{self.guid}/users")
+        for assoc in assocs:
+            assoc.training_plan=self
+        return assocs
+
+    @property
+    @lazy
     def records(self):
         recs = self._client.Listing(self._client.TrainingPlanRecord, endpoint=f"/trainingplans/{self.guid}/records")
         for rec in recs:
@@ -100,6 +108,9 @@ class TrainingPlan(Object):
 
 
 class TrainingPlanItem(Object):
+
+    def __repr__(self):
+
     
     @property
     @lazy
