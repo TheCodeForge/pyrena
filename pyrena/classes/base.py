@@ -179,6 +179,12 @@ class Object():
         - **data - Object properties to update. Use attribute GUIDs to update custom attributes.
         """
 
+        def process_values(x):
+
+            return {"guid":x.guid} if isinstance(x, Object) else x
+
+        data = {x: process_values(data[x]) for x in data}
+
         response = self._client._put(self.endpoint, data)
 
         self.__dict__.update(response)
