@@ -355,8 +355,9 @@ def docs():
 
             args = [f"{'*' if params[x].name=='args' else ''}{'**' if params[x].name=='kwargs' else ''}{params[x].name}{f'={params[x].default.__repr__()}' if params[x].default != params[x].empty else ''}" for x in params if params[x].name!='self']
 
+            doc = getattr(class_obj, method).__doc__.format(name=class_obj.__name__)
 
-            md+= f"### `{method}({', '.join(args)})`\n\n{getattr(class_obj, method).__doc__}\n\n"
+            md+= f"### `{method}({', '.join(args)})`\n\n{doc}\n\n"
 
     with open("pyrena.html", "w+") as file:
         file.write(mistletoe.markdown(md))

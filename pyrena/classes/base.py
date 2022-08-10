@@ -125,7 +125,7 @@ class Object():
 
         Optional arguments:
 
-        value - A specific property to dump. If None, all of the object's lazy-loaded properties will be dumped.
+        value - str naming a specific property to dump. If None, all of the {name}'s lazy-loaded properties will be dumped.
         """
 
         if value:
@@ -141,7 +141,7 @@ class Object():
 
     def create(self):
         """
-        Creates a new object in Arena based on object attributes. Not available for objects retrieved from Arena.
+        Creates a new {name} in Arena based on object attributes. Not available for {name}s retrieved from Arena.
         """
 
         if self.__dict__.get("guid"):
@@ -172,11 +172,11 @@ class Object():
 
     def update(self, **data):
         """
-        Updates the object properties in Arena based on attributes passed in.
+        Updates the {name} properties in Arena based on attributes passed in.
 
         Required arguments:
 
-        - **data - Object properties to update. Use attribute GUIDs to update custom attributes.
+        - **data - {name} properties to update. Use attribute GUIDs to update custom attributes.
         """
 
         def process_values(x):
@@ -191,13 +191,13 @@ class Object():
 
     def delete(self):
         """
-        Deletes the object in Arena.
+        Deletes the {name} in Arena.
         """
         self._client._delete(self.endpoint)
 
     def reload(self):
         """
-        Hard reloads the object from Arena. Useful when object is first obtained via a Listing search, which does not include all desired information.
+        Hard reloads the {name} from Arena. Useful when {name} is first obtained via a Listing search, which may include all desired information.
         """
 
         data = self._client._get(self.endpoint)
@@ -217,7 +217,7 @@ class openable_mixin():
 
     def open(self):
         """
-        Open the object in the browser. Requires also being logged into Arena in the default web browser.
+        Open the {name} in the browser. Requires also being logged into Arena in the default web browser.
         """
 
         webbrowser.open(f"{self._client.browser_url}{self.guid}")
