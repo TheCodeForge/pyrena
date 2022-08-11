@@ -65,6 +65,24 @@ class Object():
 
             self.__dict__.update(data)
 
+        # elif number and not kwargs:
+
+        #     self.endpoint=getattr(self.__class__, 'endpoint')
+        #     if not self.endpoint:
+        #         raise ValueError(f"{self.__class__.__name__} objects cannot be directly obtained by number.")
+
+        #     if not isinstance(self.endpoint, property):
+        #         raise ValueError(f"{self.__class__.__name__} objects cannot be directly obtained by number.")
+
+        #     obj = self._client.Listing(self.__class__, number=number)[0]
+
+        #     self.__dict__.update(obj.__dict__)
+
+        #     self.reload()
+
+
+
+
         elif kwargs:
             self.guid=guid
             self.__dict__.update(kwargs)
@@ -110,6 +128,13 @@ class Object():
             if target_name in self.__dict__:
                 target_time=self.__dict__[target_name]
                 return int(time.mktime(time.strptime(self.__dict__[target_name], "%Y-%m-%dT%H:%M:%SZ")))
+            else:
+                raise AttributeError(f"'{self.__class__.__name__}' object has no attribute '{name}'")
+        elif name.endswith("_gmp"):
+            target_name=f"{name.split('_gmp')[0]}DateTime"
+            if target_name in self.__dict__:
+                target_time=self.__dict__[target_name]
+                return time.strftime(time.strptime(self.__dict__[target_name], "%Y-%m-%dT%H:%M:%SZ"), "%H:%M:%S %d %b %Y")
             else:
                 raise AttributeError(f"'{self.__class__.__name__}' object has no attribute '{name}'")
         elif name in self.__dict__:
@@ -197,7 +222,7 @@ class Object():
 
     def reload(self):
         """
-        Hard reloads the {name} from Arena. Useful when {name} is first obtained via a Listing search, which may include all desired information.
+        Hard reloads the {name} from Arena. Useful when {name} is first obtained via a Listing search, which may not include all desired information.
         """
 
         data = self._client._get(self.endpoint)
