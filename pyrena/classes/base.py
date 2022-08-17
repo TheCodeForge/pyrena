@@ -190,7 +190,22 @@ class Object():
 
         response= self._client._post(self.__class__.listing_endpoint, data=data)
 
-        self.__dict__.update(response)
+        if "guid" in response:
+            self.__dict__.update(response)
+
+        elif "guid" not in response and "name" in data:
+            print("Delayed creation, using name search and waiting for data....")
+            results=[]
+            while not results:
+                time.sleep(1)
+                results=self._client.Listing(self.__class__, name=data["name"])
+
+            if len(results)>1:
+                raise RuntimeError(f"Unable to resolve created {self.__class__.__name__}. Try using a unique name in order to improve reliability.")
+
+            self.__dict__.update(results[0].__dict__)
+
+
 
         if "endpoint" in dir(self.__class__):
             self.endpoint=getattr(self.__class__, 'endpoint').format(guid=self.guid)

@@ -234,7 +234,12 @@ class Arena():
         if getattr(obj, "_can_paginate", True):
 
             params["limit"]=min(limit, 400) if limit else 400
-            params["offset"]=offset  
+            params["offset"]=offset
+
+        #process percent/plus needed in object numbers
+        if "number" in params:
+            params["number"]=params["number"].replace('%', '%25')
+            params["number"]=params["number"].replace('+', '%2b')
 
         data=self._get(endpoint, params=params)
 
