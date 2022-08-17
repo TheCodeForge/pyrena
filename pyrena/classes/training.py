@@ -7,7 +7,7 @@ class TrainingPlan(Object):
     @property
     @lazy
     def manager(self):
-        return self._client.User(self.manager['guid'])
+        return self._client.User(self.__dict__['manager']['guid'])
 
     def set_status(self, status):
 
