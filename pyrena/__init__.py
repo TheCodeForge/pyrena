@@ -160,7 +160,11 @@ class Arena():
             raise requests.exceptions.SSLError("Unable to establish a secure connection to Arena. Use a different internet connection or use `ssl_verify=False` to allow insecure requests.")
 
         if self._debug:
-            print(f"{method.upper()} {endpoint} - {req.status_code}")
+            print("===PAYLOAD===")
+            print(f"{method.upper()} {endpoint}")
+            pprint(data)
+            print("===RESPONSE===")
+            print(f"status {req.status_code}")
             pprint(req.json())
 
         if req.status_code >=400:
