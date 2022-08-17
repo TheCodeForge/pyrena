@@ -8,6 +8,7 @@ import inspect
 import warnings
 import urllib3
 import ssl
+from pprint import pprint
 
 import pyrena.classes as classes
 
@@ -120,9 +121,6 @@ class Arena():
         #set time to re-auth, 1 min before expiry
         self.reauth_utc = int(time.time())+60*60*80
 
-        if self._debug:
-            print(login_data)
-
     def logout(self):
 
         """
@@ -163,6 +161,7 @@ class Arena():
 
         if self._debug:
             print(f"{method.upper()} {endpoint} - {req.status_code}")
+            pprint(req.json())
 
         if req.status_code >=400:
             data=req.json()
