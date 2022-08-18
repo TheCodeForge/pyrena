@@ -193,15 +193,20 @@ class Object():
         if "guid" in response:
             self.__dict__.update(response)
 
-        elif "guid" not in response and "name" in data:
-            print("Delayed creation, using name search and waiting for data....")
+        ##if guid not provided          and errors provided     and "unable to read" error code in error list       and there's a name to search by
+        elif "guid" not in response and "errors" in response and 3124 in [x['code'] for x in response[errors]] and "name" in data:
+            print("Delayed creation, using name search and waiting up to 15s for data....")
             results=[]
+            i=0
             while not results:
                 time.sleep(1)
                 results=self._client.Listing(self.__class__, name=data["name"])
 
             if len(results)>1:
-                raise RuntimeError(f"Unable to resolve created {self.__class__.__name__}. Try using a unique name in order to improve reliability.")
+                raise RuntimeError(f"Unable to resolve created {self.__class__.__name__} - {len(results)} results found for name \"{data['name']}\". Delete these and try again or use a unique name for better reliability.")
+
+            if i==15:
+                raise RuntimeError(f"Arena failed to confirm creation of the requested {self.__class__.__name__}.")
 
             self.__dict__.update(results[0].__dict__)
 
