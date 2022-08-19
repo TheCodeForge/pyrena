@@ -194,7 +194,7 @@ class Object():
             self.__dict__.update(response)
 
         ##if guid not provided          and errors provided     and "unable to read" error code in error list       and there's a name to search by
-        elif "guid" not in response and "errors" in response and 3124 in [x['code'] for x in response[errors]] and "name" in data:
+        elif "guid" not in response and "errors" in response and 3124 in [x['code'] for x in response['errors']] and "name" in data:
             print("Delayed creation, using name search and waiting up to 15s for data....")
             results=[]
             i=0
