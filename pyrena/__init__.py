@@ -297,6 +297,25 @@ class Arena():
                 already_seen.append(entry.__repr__())
                 yield entry
 
+    def find(self, obj_type, **kwargs):
+
+        """
+        Searches for a single instance of an object and raises an error if 0 or 2+ are found
+
+        Required arguments:
+        - obj       - Object class to aquire. For example, client.QualityProcess
+
+        Optional arguments:
+        - **kwargs  - Property arguments for search parameters. Should be sufficiently narrow to define a single object.
+        """
+
+        results=self.Listing(obj_type, **kwargs)
+
+        if len(results) != 1:
+            raise RuntimeError(f"{len(results)} instances of {obj_type.__class__.__name__} found")
+
+        return results[0]
+
     def clear_cache(self, item=None):
 
         """
