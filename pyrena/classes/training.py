@@ -32,7 +32,7 @@ class TrainingPlan(Object):
 
         x=self._client._post("/trainingplans/statuschanges", data=body)
 
-        self.__dict__.update(x.json())
+        self.__dict__.update(x)
 
     @property
     @lazy
