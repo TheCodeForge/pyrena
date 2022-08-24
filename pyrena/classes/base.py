@@ -269,6 +269,7 @@ class Object():
         data={x:process_values(self.__dict__[x]) for x in self.__dict__}
 
         data.pop("_client")
+        data.pop("_cache")
 
         return data
     
