@@ -256,6 +256,22 @@ class Object():
     @lazy
     def user(self):
         return self._client.User(self.creator['guid'])
+
+    @property
+    def json(self):
+
+        def process_values(x):
+            if isinstance(x, Object):
+                return x.json
+            else:
+                return x
+
+        data={x:process_values(self.__dict__[x]) for x in self.__dict__}
+
+        data.pop("_client")
+
+        return data
+    
     
 class openable_mixin():
 
