@@ -266,10 +266,12 @@ class Object():
             else:
                 return x
 
-        data={x:process_values(self.__dict__[x]) for x in self.__dict__}
+        data={x: self.__dict__[x] for x in self.__dict__}
 
         data.pop("_client")
         data.pop("_cache")
+        
+        data={x:process_values(data[x]) for x in self.data}
 
         return data
     
