@@ -380,7 +380,7 @@ class Arena():
 
         d= time.strftime("%d_%B_%Y")
 
-        folder_name = folder_name or f"Arena_archive_{d}"
+        folder_name = folder_name or f"Arena_archive_{self._workspace_name}_{d}"
 
         if not os.path.exists(folder_name):
             os.mkdir(folder_name)
