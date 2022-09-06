@@ -271,7 +271,7 @@ class Object():
         data.pop("_client")
         data.pop("_cache")
         
-        data={x:process_values(data[x]) for x in self.data}
+        data={x:process_values(data[x]) for x in data}
 
         return data
     
