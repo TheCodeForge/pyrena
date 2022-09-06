@@ -10,6 +10,7 @@ import urllib3
 import ssl
 from pprint import pprint
 import os
+import json
 
 import pyrena.classes as classes
 
