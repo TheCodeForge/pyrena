@@ -184,7 +184,7 @@ class Arena():
 
         if method.lower()=="delete":
             return
-        elif expect_json=False:
+        elif expect_json==False:
             return req.content
         else:
             return req.json()
