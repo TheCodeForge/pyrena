@@ -115,9 +115,7 @@ class File(Object, openable_mixin):
     @property
     @lazy
     def content(self):
-        return self._client._get(f"/files/{self.guid}/content").content
-
-
+        return self._client._get(f"/files/{self.guid}/content", expect_json=False)
 
 
 class FileCorrection(Object):
