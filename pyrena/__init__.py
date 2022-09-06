@@ -9,6 +9,7 @@ import warnings
 import urllib3
 import ssl
 from pprint import pprint
+import os
 
 import pyrena.classes as classes
 
@@ -131,6 +132,10 @@ class Arena():
         self.__dict__["_username"]=None
         self.__dict__["_password"]=None
         self.__dict__["me"]=None
+        self._workspace_id=None
+        self._workspace_name=NOne
+        self.headers["arena_session_id"]=None
+        self.reauth_utc=0
 
     def _fetch(self, method, endpoint, params={}, data={}, files={}, headers={}, **kwargs):
 
@@ -245,6 +250,9 @@ class Arena():
 
         listing=[obj(**dictionary) for dictionary in data["results"]]
 
+        if not listing:
+            return []
+
         for item in listing:
             item._client=self
 
@@ -312,7 +320,7 @@ class Arena():
         results=self.Listing(obj_type, **kwargs)
 
         if len(results) != 1:
-            raise RuntimeError(f"{len(results)} instances of {obj_type.__class__.__name__} found")
+            raise RuntimeError(f"{len(results)} instances of {obj_type.__class__.__name__} found: {results}")
 
         return results[0]
 
@@ -350,6 +358,38 @@ class Arena():
         else:
             self.__dict__['me']=self.Listing(self.User, email=self.__dict__['_username'])[0]
             return self.__dict__['me']
+
+    def archive(self, folder_name="", exclude=[]):
+
+        """
+        Downloads all available data from the current Arena instance and saves it in JSON format.
+        Intended to be used as a rapid bulk export for local backup.
+
+        This may take some time, will verbosely output data, and may consume a large portion of the daily API limit.
+
+        Optional arguments:
+
+        - folder    - Path to existing archive folder, if one already exists
+        - exclude   - list of Arena classes to exclude from the backup.
+        """
+
+        d= time.strftime("%d_%B_%Y")
+
+        folder_name = folder_name or f"Arena_archive_{d}"
+
+        if not os.path.exists(folder_name):
+            os.mkdir(folder_name)
+
+
+        #Quality
+        quality = self.Listing(self.QualityProcess, limit=None)
+        for qp in quality:
+            qp.__dict__["steps"]=[x.json for x in qp.steps]
+
+        with open(f"{folder_name}/quality{time.strftime('%d_%B_%Y')}.txt", "w+"):
+            file.write(json.dumps([x.json for x in quality], indent=2))
+            file.truncate
+
 
 
 def docs():
