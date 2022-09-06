@@ -392,7 +392,7 @@ class Arena():
             files=self.Listing(self.File, limit=None)
             print(f"{len(files)} Files found")
 
-            with open(f"{folder_name}/files_{time.strftime('%d_%B_%Y')}.txt", "w+") as f:
+            with open(f"{folder_name}/Files_{time.strftime('%d_%B_%Y')}.txt", "w+") as f:
                 f.write(json.dumps([x.json for x in files], indent=2))
                 f.truncate()
             print("File json data saved")
@@ -424,7 +424,7 @@ class Arena():
                 i+=1
                 print(f"{i}/{len(items)} [{item.number}] {item.name}")
 
-            with open(f"{folder_name}/items_{time.strftime('%d_%B_%Y')}.txt", "w+") as f:
+            with open(f"{folder_name}/Items_{time.strftime('%d_%B_%Y')}.txt", "w+") as f:
                 f.write(json.dumps([x.json for x in items], indent=2))
                 f.truncate()
 
@@ -445,7 +445,7 @@ class Arena():
                 i+=1
                 print(f"{i}/{len(qps)} [{qp.number}] {qp.name}")
 
-            with open(f"{folder_name}/quality_{time.strftime('%d_%B_%Y')}.txt", "w+") as f:
+            with open(f"{folder_name}/Quality_{time.strftime('%d_%B_%Y')}.txt", "w+") as f:
                 f.write(json.dumps([x.json for x in qps], indent=2))
                 f.truncate()
 
@@ -466,7 +466,7 @@ class Arena():
                 i+=1
                 print(f"{i}/{len(tps)} [{tp.number}] {tp.name}")
 
-            with open(f"{folder_name}/training_{time.strftime('%d_%B_%Y')}.txt", "w+") as f:
+            with open(f"{folder_name}/Training_{time.strftime('%d_%B_%Y')}.txt", "w+") as f:
                 f.write(json.dumps([x.json for x in tps], indent=2))
                 f.truncate()
 

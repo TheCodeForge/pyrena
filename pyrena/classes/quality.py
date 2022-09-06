@@ -126,7 +126,7 @@ class QualityProcessStep(Object):
     @lazy
     def affected(self):
         
-        affected_list = self._client.Listing(self._client.QualityProcessStepAffected, endpoint=f"/qualityprocesses/{self.quality_process.guid}/steps/{self.guid}")
+        affected_list = self._client.Listing(self._client.QualityProcessStepAffected, endpoint=f"/qualityprocesses/{self.quality_process.guid}/steps/{self.guid}/affected")
 
         for a in affected_list:
             a.quality_process=self.quality_process
