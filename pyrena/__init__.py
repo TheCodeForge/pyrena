@@ -403,7 +403,7 @@ class Arena():
             i=0
             print("Saving files...")
             for file in files:
-                with open(f"{folder_name}/file_vault/[{file.number}] {file.title}.{file.format}", "w+") as f:
+                with open(f"{folder_name}/file_vault/[{file.number}] {file.title}.{file.format}", "wb+") as f:
                     f.write(file.content)
                     f.truncate()
                 i+=1
