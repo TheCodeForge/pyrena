@@ -122,6 +122,24 @@ class QualityProcessStep(Object):
             data=data
             )
 
+    @property
+    @lazy
+    def affected(self):
+        
+        affected_list = self._client.Listing(self._client.QualityProcessStepAffected, endpoint=f"/qualityprocesses/{self.quality_process.guid}/steps/{self.guid}")
+
+        for a in affected_list:
+            a.quality_process=self.quality_process
+            a.quality_process_step=self
+
+        return affected_list
+
+
+class QualityProcessStepAffected(Object):
+
+    @property
+    def endpoint(self):
+        return f"/qualityprocesses/{self.quality_process.guid}/steps/{self.step.guid}/affected/{self.guid}"
 
 class QualityProcessTemplate(Object):
     listing_endpoint="/settings/qualityprocesses/templates"

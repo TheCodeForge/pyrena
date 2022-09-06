@@ -137,7 +137,7 @@ class Arena():
         self.headers["arena_session_id"]=None
         self.reauth_utc=0
 
-    def _fetch(self, method, endpoint, params={}, data={}, files={}, headers={}, **kwargs):
+    def _fetch(self, method, endpoint, params={}, data={}, files={}, headers={}, expect_json=True, **kwargs):
 
         if not self._reqs_remaining:
             raise ArenaHTTPError("Request limit of 25000/day reached.")
@@ -184,6 +184,8 @@ class Arena():
 
         if method.lower()=="delete":
             return
+        elif expect_json=False:
+            return req.content
         else:
             return req.json()
 
@@ -362,6 +364,8 @@ class Arena():
     def archive(self, folder_name="", exclude=[]):
 
         """
+        WIP feature
+
         Downloads all available data from the current Arena instance and saves it in JSON format.
         Intended to be used as a rapid bulk export for local backup.
 
@@ -380,17 +384,55 @@ class Arena():
         if not os.path.exists(folder_name):
             os.mkdir(folder_name)
 
+        #Files
+        if self.File not in exclude:
+            files=self.Listing(self.File, limit=None)
+
+            with open(f"{folder_name}/files_{time.strftime('%d_%B_%Y')}.txt", "w+"):
+                file.write(json.dumps([x.json for x in files], indent=2))
+                file.truncate()
+
+            if not os.path.exists(f"{folder_name}/file_vault"):
+                os.mkdir(f"{folder_name}/file_vault")
+
+            for file in files:
+                with open(f"{folder_name}/file_vault/[{file.number}] {file.title}.{file.format}", "w+") as f:
+
+
+        #Item
+        if self.Item not in exclude:
+            items = self.Listing(self.Item, limit=None)
+            for item in items:
+                item.__dict__["files"]=[x.json for x in item.file_associations]
+                item.__dict__["revisions"]=[x.json for x in item.revisions]
+
+            with open(f"{folder_name}/items_{time.strftime('%d_%B_%Y')}.txt", "w+") as f:
+                f.write(json.dumps([x.json for x in items], indent=2))
+                f.truncate()
 
         #Quality
-        quality = self.Listing(self.QualityProcess, limit=None)
-        for qp in quality:
-            qp.__dict__["steps"]=[x.json for x in qp.steps]
+        if self.QualityProcess not in exclude:
+            qps = self.Listing(self.QualityProcess, limit=None)
+            for qp in qps:
+                for step in qp.steps:
+                    step.__dict__['affected']=[x.json for x in step.affected]
+                qp.__dict__["steps"]=[x.json for x in qp.steps]
 
-        with open(f"{folder_name}/quality{time.strftime('%d_%B_%Y')}.txt", "w+"):
-            file.write(json.dumps([x.json for x in quality], indent=2))
-            file.truncate
+            with open(f"{folder_name}/quality_{time.strftime('%d_%B_%Y')}.txt", "w+") as f:
+                f.write(json.dumps([x.json for x in qps], indent=2))
+                f.truncate()
 
+        #Training
+        if self.TrainingPlan not in exclude:
+            tps = self.Listing(self.TrainingPlan, limit=None)
+            for tp in tps:
+                tp.__dict__["records"]=[x.json for x in tp.records]
+                tp.__dict__["items"]=[x.json for x in tp.item_associations]
+                tp.__dict__["users"]=[x.json for x in tp.user_associations]
 
+            with open(f"{folder_name}/training_{time.strftime('%d_%B_%Y')}.txt", "w+") as f:
+                f.write(json.dumps([x.json for x in tps], indent=2))
+                f.truncate()
 
 def docs():
 
