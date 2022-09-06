@@ -260,7 +260,7 @@ class Arena():
             item._client=self
 
 
-        if len(listing)==limit:
+        if not limit or len(listing)==limit:
             listing+=self.Listing(
                     obj, 
                     endpoint, 
