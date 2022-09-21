@@ -111,6 +111,9 @@ class Object():
             else:
                 return f"<{self.__class__.__name__}(id={self.guid})>"
 
+    def __hash__(self):
+        return hash(self.__repr__())
+
     def __str__(self):
         if "name" in self.__dict__:
             return f"<{self.__class__.__name__}(name={self.name})>"
