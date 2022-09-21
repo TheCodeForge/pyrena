@@ -419,6 +419,7 @@ class Arena():
 
             print(f"{len(files_to_download)} Files found, downloading")
 
+            i=-
             if not os.path.exists(f"{folder_name}/file_vault"):
                 os.mkdir(f"{folder_name}/file_vault")
 
@@ -428,7 +429,7 @@ class Arena():
                     f.write(file.content)
                     f.truncate()
                 i+=1
-                print(f"{i}/{len(files)} [{file.number}] {file.title}.{file.format}")
+                print(f"{i}/{len(files_to_download)} [{file.number}] {file.title}.{file.format}")
 
         #Quality
         if self.QualityProcess not in exclude:
