@@ -397,7 +397,9 @@ class Arena():
             print("Loading file associations and revision data")
             for item in items:
                 item.__dict__["files"]=[x.file.json for x in item.file_associations]
-                item.__dict__["revisions"]=[x.json for x in item.revisions]
+
+                if self.ItemRevision not in exclude:
+                    item.__dict__["revisions"]=[x.json for x in item.revisions]
                 i+=1
                 print(f"{i}/{len(items)} [{item.number}] {item.name}")
 
