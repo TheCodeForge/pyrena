@@ -385,7 +385,7 @@ class Arena():
         if not os.path.exists(folder_name):
             os.mkdir(folder_name)
 
-        files_to_download=set()
+        files_to_download=[]
 
         #Items
         if self.Item not in exclude:
@@ -414,7 +414,8 @@ class Arena():
 
                 for file in files:
 
-                    files_to_download.add(file)
+                    if file not in files_to_download:
+                        files_to_download.append(file)
 
             print(f"{len(files_to_download)} Files found, downloading")
 
