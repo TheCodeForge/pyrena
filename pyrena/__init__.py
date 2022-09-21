@@ -419,7 +419,7 @@ class Arena():
 
             print(f"{len(files_to_download)} Files found, downloading")
 
-            i=-
+            i=0
             if not os.path.exists(f"{folder_name}/file_vault"):
                 os.mkdir(f"{folder_name}/file_vault")
 
