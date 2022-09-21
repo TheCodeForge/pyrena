@@ -39,6 +39,12 @@ class Item(Object, openable_mixin):
 
     @property
     @lazy
+    def files(self):
+        return [x.file for x in self.file_associations]
+    
+
+    @property
+    @lazy
     def thumbnail(self):
 
         return self._client._get(f"/items/{self.guid}/image/content")
@@ -87,7 +93,9 @@ class ItemFileAssociation(Object):
     @property
     @lazy
     def file(self):
-        return self._client.File(self.__dict__['file']['guid'])
+        f= self._client.File(self.__dict__['file']['guid'])
+        f._client=self._client
+        return f
 
     @property
     def endpoint(self):
