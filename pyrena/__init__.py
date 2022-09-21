@@ -385,30 +385,7 @@ class Arena():
         if not os.path.exists(folder_name):
             os.mkdir(folder_name)
 
-        #Files
-        if self.File not in exclude:
-
-            print("Collecting Files...")
-            files=self.Listing(self.File, limit=None)
-            print(f"{len(files)} Files found")
-
-            with open(f"{folder_name}/Files_{time.strftime('%d_%B_%Y')}.txt", "w+") as f:
-                f.write(json.dumps([x.json for x in files], indent=2))
-                f.truncate()
-            print("File json data saved")
-
-            if not os.path.exists(f"{folder_name}/file_vault"):
-                os.mkdir(f"{folder_name}/file_vault")
-
-            i=0
-            print("Saving files...")
-            for file in files:
-                with open(f"{folder_name}/file_vault/[{file.number}] {file.title}.{file.format}", "wb+") as f:
-                    f.write(file.content)
-                    f.truncate()
-                i+=1
-                print(f"{i}/{len(files)} [{file.number}] {file.title}.{file.format}")
-
+        files_to_download=set()
 
         #Items
         if self.Item not in exclude:
@@ -419,7 +396,7 @@ class Arena():
             i=0
             print("Loading file associations and revision data")
             for item in items:
-                item.__dict__["files"]=[x.json for x in item.file_associations]
+                item.__dict__["files"]=[x.file.json for x in item.file_associations]
                 item.__dict__["revisions"]=[x.json for x in item.revisions]
                 i+=1
                 print(f"{i}/{len(items)} [{item.number}] {item.name}")
@@ -429,6 +406,28 @@ class Arena():
                 f.truncate()
 
             print("Item JSON data saved")
+
+            print("Looking up attached Files...")
+            for item in items:
+
+                files=[x.file for x in item.file_associations]
+
+                for file in files:
+
+                    files_to_download.add(file)
+
+            print(f"{len(files_to_download)} Files found, downloading")
+
+            if not os.path.exists(f"{folder_name}/file_vault"):
+                os.mkdir(f"{folder_name}/file_vault")
+
+            for file in files_to_download:
+
+                with open(f"{folder_name}/file_vault/[{file.number}] {file.title}.{file.format}", "wb+") as f:
+                    f.write(file.content)
+                    f.truncate()
+                i+=1
+                print(f"{i}/{len(files)} [{file.number}] {file.title}.{file.format}")
 
         #Quality
         if self.QualityProcess not in exclude:
