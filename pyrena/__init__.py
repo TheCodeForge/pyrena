@@ -183,6 +183,9 @@ class Arena():
         #update reqs remaining
         self._reqs_remaining = req.headers.get("X-Arena-Requests-Remaining", self._reqs_remaining)
 
+        if self._reqs_remaining < 1000 and self._debug:
+            print(f"{self._reqs_remaining} requests remaining")
+
         if method.lower()=="delete":
             return
         elif expect_json==False:
@@ -362,118 +365,7 @@ class Arena():
             self.__dict__['me']=self.Listing(self.User, email=self.__dict__['_username'])[0]
             return self.__dict__['me']
 
-    def archive(self, folder_name="", exclude=[]):
-
-        """
-        WIP feature
-
-        Downloads all available data from the current Arena instance and saves it in JSON format.
-        Intended to be used as a rapid bulk export for local backup.
-
-        This may take some time, will verbosely output data, and may consume a large portion of the daily API limit.
-
-        Optional arguments:
-
-        - folder    - Path to existing archive folder, if one already exists
-        - exclude   - list of Arena classes to exclude from the backup.
-        """
-
-        d= time.strftime("%d_%B_%Y")
-
-        folder_name = folder_name or f"Arena_archive_{self._workspace_name}_{d}"
-
-        if not os.path.exists(folder_name):
-            os.mkdir(folder_name)
-
-        files_to_download=[]
-
-        #Items
-        if self.Item not in exclude:
-            print("Collecting Items...")
-            items = self.Listing(self.Item, limit=None)
-            print(f"{len(items)} Items found")
-
-            i=0
-            print("Loading file associations and revision data")
-            for item in items:
-                item.__dict__["files"]=[x.file.json for x in item.file_associations]
-
-                if self.ItemRevision not in exclude:
-                    item.__dict__["revisions"]=[x.json for x in item.revisions]
-                i+=1
-                print(f"{i}/{len(items)} [{item.number}] {item.name}")
-
-            with open(f"{folder_name}/Items_{time.strftime('%d_%B_%Y')}.txt", "w+") as f:
-                f.write(json.dumps([x.json for x in items], indent=2))
-                f.truncate()
-
-            print("Item JSON data saved")
-
-            print("Looking up attached Files...")
-            for item in items:
-
-                files=[x.file for x in item.file_associations]
-
-                for file in files:
-
-                    if file not in files_to_download:
-                        files_to_download.append(file)
-
-            print(f"{len(files_to_download)} Files found, downloading")
-
-            i=0
-            if not os.path.exists(f"{folder_name}/file_vault"):
-                os.mkdir(f"{folder_name}/file_vault")
-
-            for file in files_to_download:
-
-                with open(f"{folder_name}/file_vault/[{file.number}] {file.title}.{file.format}", "wb+") as f:
-                    f.write(file.content)
-                    f.truncate()
-                i+=1
-                print(f"{i}/{len(files_to_download)} [{file.number}] {file.title}.{file.format}")
-
-        #Quality
-        if self.QualityProcess not in exclude:
-            print("Collecting Quality...")
-            qps = self.Listing(self.QualityProcess, limit=None)
-            print(f"{len(qps)} Quality records found")
-
-            i=0
-            print("Loading step and attachment data")
-            for qp in qps:
-                for step in qp.steps:
-                    step.__dict__['affected']=[x.json for x in step.affected]
-                qp.__dict__["steps"]=[x.json for x in qp.steps]
-                i+=1
-                print(f"{i}/{len(qps)} [{qp.number}] {qp.name}")
-
-            with open(f"{folder_name}/Quality_{time.strftime('%d_%B_%Y')}.txt", "w+") as f:
-                f.write(json.dumps([x.json for x in qps], indent=2))
-                f.truncate()
-
-            print("Quality JSON data saved")
-
-        #Training
-        if self.TrainingPlan not in exclude:
-            print("Collecting Training...")
-            tps = self.Listing(self.TrainingPlan, limit=None)
-            print(f"{len(tps)} Training Plans found")
-
-            i=0
-            print("Loading item and user references and training record data")
-            for tp in tps:
-                tp.__dict__["records"]=[x.json for x in tp.records]
-                tp.__dict__["items"]=[x.json for x in tp.item_associations]
-                tp.__dict__["users"]=[x.json for x in tp.user_associations]
-                i+=1
-                print(f"{i}/{len(tps)} [{tp.number}] {tp.name}")
-
-            with open(f"{folder_name}/Training_{time.strftime('%d_%B_%Y')}.txt", "w+") as f:
-                f.write(json.dumps([x.json for x in tps], indent=2))
-                f.truncate()
-
-            print("Training JSON data saved")
+   
 def docs():
 
     """
