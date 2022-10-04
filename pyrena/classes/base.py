@@ -271,8 +271,8 @@ class Object():
 
         data={x: self.__dict__[x] for x in self.__dict__}
 
-        data.pop("_client")
-        data.pop("_cache")
+        data.pop("_client", None)
+        data.pop("_cache", None)
         
         data={x:process_values(data[x]) for x in data}
 
