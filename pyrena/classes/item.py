@@ -93,9 +93,7 @@ class ItemFileAssociation(Object):
     @property
     @lazy
     def file(self):
-        f= self._client.File(self.__dict__['file']['guid'])
-        f._client=self._client
-        return f
+        return self._client.File(self.__dict__['file']['guid'])
 
     @property
     def endpoint(self):
