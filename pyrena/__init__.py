@@ -372,7 +372,7 @@ def docs():
     Generate and display this documentation page.
     """
 
-    classlist = {name:cls for name, cls in list(classes.__dict__.items()) if isinstance(cls, type) and name!="Object"}
+    classlist = {name:cls for name, cls in list(classes.__dict__.items()) if isinstance(cls, type) and name not in ["Object"] and "_mixin" not in name}
     classlist["Arena"]=Arena
 
     #page header
