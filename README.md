@@ -27,7 +27,7 @@ import pyrena
 client = pyrena.Arena("username", "password")
 ```
 
-Government users should add the parameter `arenagov=True"` during client creation.
+Government users should add the parameter `arenagov=True` during client creation.
 
 ### Change users
 
