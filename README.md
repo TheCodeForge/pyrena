@@ -46,6 +46,13 @@ search_results = client.Listing(client.QualityProcess, number="NCMR-*")
 
 ### Retrieve specific object
 
+Option 1 - get object by object GUID, if known
+
 ```python
 my_change_order = client.Change("object_guid")
 ```
+
+Option 2 - get object by its "user-friendly" ID (known as `number` in the API)
+
+```python
+my_capa = client.find(client.QualityProcess, number="CAPA-000001")
