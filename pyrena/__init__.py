@@ -19,7 +19,7 @@ class ArenaHTTPError(Exception):
 
 class Arena():
 
-    def __init__(self, username=None, password=None, ssl_verify=True, user_agent="Python Pyrena", verbose=False, arenagov=False):
+    def __init__(self, username=None, password=None, env=None, ssl_verify=True, user_agent="Python Pyrena", verbose=False, arenagov=False):
 
         """
         Creates the Arena client
@@ -44,23 +44,23 @@ class Arena():
         self.user_agent = user_agent
 
         self._debug=verbose
-
+ 
         self.__dict__['_username']=username
         self.__dict__['_password']=password
-
+        self.__dict__['_env']=env
 
         self.headers={
             "User-Agent": self.user_agent,
             "Content-Type": "application/json"
         }
 
-        self._reqs_remaining=25000
+        self._reqs_remaining=123456789 #arbitrary high - depends on your deal with Arena
 
         #login
         try:
             self.login()
         except ArenaHTTPError:
-            print("Unable to log in. Call `login(username, password)` on this client to authenticate with Arena.")
+            print("Unable to log in. Call `login(username, password + optional env)` on this client to authenticate with Arena.")
         except ssl.SSLCertVerificationError:
             print("Unable to establish a secure connection to Arena. Use a different internet connection or use `ssl_verify=False` to allow insecure requests.")
 
@@ -89,9 +89,12 @@ class Arena():
         return obj
 
     def __repr__(self):
-        return f"<Arena(user={self.__dict__['_username']})>"
+        if self.__dict__['_env']:
+            return f"<Arena(user={self.__dict__['_username']}) in env={self.__dict__['_env']}>"
+        else:
+            return f"<Arena(user={self.__dict__['_username']}) in default env>"
 
-    def login(self, username=None, password=None):
+    def login(self, username=None, password=None, env=None):
 
         """
         Log into Arena
@@ -103,45 +106,48 @@ class Arena():
 
         self.__dict__["_username"] = username or self.__dict__["_username"]
         self.__dict__["_password"] = password or self.__dict__["_password"]
+        self.__dict__["_env"] = env or self.__dict__["_env"]
 
-        login_data = self._post(
-            "/login",
-            data={
-                "email":self.__dict__["_username"],
-                "password":self.__dict__["_password"]
-                }
-            )
-
+        if env: #e.g to switch between several workspaces or sandboxes
+            login_data = self._post(
+                "/login",
+                data={
+                    "email":self.__dict__["_username"],
+                    "password":self.__dict__["_password"],
+                    "workspaceId":self.__dict__["_env"]
+                    }
+                )
+        else: # if no env specified, logs into to default env
+            login_data = self._post(
+                "/login",
+                data={
+                    "email":self.__dict__["_username"],
+                    "password":self.__dict__["_password"],
+                    }
+                )
 
         #set auth token
         self.headers["arena_session_id"]=login_data["arenaSessionId"]
-
-        #set workspace id and name
-        self._workspace_id=login_data["workspaceId"]
-        self._workspace_name=login_data["workspaceName"]
-
         #set time to re-auth, 1 min before expiry
-        self.reauth_utc = int(time.time())+60*60*80
+        self.reauth_utc = int(time.time())+60*80 # to customize
 
     def logout(self):
 
         """
         Log out of Arena.
         """
-
-        self._put("/logout")
+        self._put("/logout", expect_json = False)
         self.__dict__["_username"]=None
         self.__dict__["_password"]=None
         self.__dict__["me"]=None
-        self._workspace_id=None
-        self._workspace_name=NOne
+        self.__dict__["env"]=None
         self.headers["arena_session_id"]=None
         self.reauth_utc=0
 
     def _fetch(self, method, endpoint, params={}, data={}, files={}, headers={}, expect_json=True, **kwargs):
 
         if not self._reqs_remaining:
-            raise ArenaHTTPError("Request limit of 25000/day reached.")
+            raise ArenaHTTPError("Request limit reached.") 
 
         #reauth 1 min before expiry
         if endpoint != "/login" and int(time.time())> self.reauth_utc:
@@ -154,7 +160,7 @@ class Arena():
             req_headers[header]=headers[header]
 
         try:
-            req = getattr(requests, method.lower())(
+            resp = getattr(requests, method.lower())(
                 url, 
                 headers=req_headers, 
                 params=params,
@@ -170,28 +176,37 @@ class Arena():
             print(f"{method.upper()} {endpoint}")
             pprint(data)
             print("===RESPONSE===")
-            print(f"status {req.status_code}")
-            pprint(req.json())
+            print(f"status {resp.status_code}")
+            pprint(resp.json())
 
-        if req.status_code >=400:
-            data=req.json()
-            raise ArenaHTTPError(f"HTTP Error {req.status_code} - {data['errors'][0]['message']} (Arena Error Code {data['errors'][0]['code']})")
+        if resp.status_code >=400:
+            data=resp.json()
+            raise ArenaHTTPError(f"HTTP Error {resp.status_code} - {data['errors'][0]['message']} (Arena Error Code {data['errors'][0]['code']})")
 
-        req.raise_for_status()
+        resp.raise_for_status()
 
 
         #update reqs remaining
-        self._reqs_remaining = req.headers.get("X-Arena-Requests-Remaining", self._reqs_remaining)
+        # getting the header that mentions how many calls remain
+        #exact name of the HTTP header hidden for more privacy:
+        for k in resp.headers:
+            #debug print
+            #print("test my iterate thru headers loop: ", k)
+            if 'Remain' in k:
+                self._reqs_remaining = int(resp.headers.get(k, self._reqs_remaining))
 
+        # print reqs remaining at login/logout:
+        if endpoint == "/login" or endpoint == "/logout":
+            print(f"Number of remaining requests: {self._reqs_remaining}")
         if self._reqs_remaining < 1000 and self._debug:
-            print(f"{self._reqs_remaining} requests remaining")
+            print(f"Caution: {self._reqs_remaining} requests remaining")
 
         if method.lower()=="delete":
             return
         elif expect_json==False:
-            return req.content
+            return resp.content
         else:
-            return req.json()
+            return resp.json()
 
     def _get(self, endpoint, params={}, **kwargs):
         return self._fetch("get", endpoint, params=params, **kwargs)
