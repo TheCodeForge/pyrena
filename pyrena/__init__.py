@@ -19,22 +19,31 @@ class ArenaHTTPError(Exception):
 
 class Arena():
 
-    def __init__(self, username=None, password=None, env=None, ssl_verify=True, user_agent="Python Pyrena", verbose=False, arenagov=False):
+    def __init__(self, username=None, password=None, env=None, ssl_verify=True, user_agent="Python Pyrena", verbose=False, arenagov=False, europe=False):
 
         """
         Creates the Arena client
 
         Optional arguments:
         - env           - Arena Workspace ID. If omitted, will use the workspace most recently accessed by the authenticated account.
-        - arenagov      - Set to True for accessing workspaces located on app.arenagov.com. Defaults to False for workspaces located on app.bom.com.
+        - arenagov      - Set to True for accessing workspaces located on app.arenagov.com. Defaults to False.
+        - europe        - Set to True for accessing workspaces located on app.europe.arenaplm.com. Defaults to False
         - ssl_verify    - Use strict SSL verification in requests. May need to be set to False when accessing Arena from a corporate-controlled network.
         - user_agent    - Set a User-Agent header.
         - verbose       - Verbosely output API requests to console
         """
 
         #set properties
-        self.base_url = "https://api.arenagov.com/v1/v1" if arenagov else "https://api.arenasolutions.com/v1"
-        self.browser_url = "https://app.arenagov.com/" if arenagov else "https://app.bom.com/"
+        if arenagov:
+            self.base_url="https://api.arenagov.com/v1"
+            self.browser_url = "https://app.arenagov.com/"
+        elif europe:
+            self.base_url="https://api.europe.arenaplm.com/v1"
+            self.browser_url = "https://app.europe.arenaplm.com/"
+        else:
+            self.base_url="https://api.arenasolutions.com/v1"
+            self.browser_url = "https://app.bom.com/"
+
         self.ssl_verify = ssl_verify
 
 
