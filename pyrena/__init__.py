@@ -25,6 +25,7 @@ class Arena():
         Creates the Arena client
 
         Optional arguments:
+        - env           - Arena Workspace ID. If omitted, will use the workspace most recently accessed by the authenticated account.
         - arenagov      - Set to True for accessing workspaces located on app.arenagov.com. Defaults to False for workspaces located on app.bom.com.
         - ssl_verify    - Use strict SSL verification in requests. May need to be set to False when accessing Arena from a corporate-controlled network.
         - user_agent    - Set a User-Agent header.
@@ -54,7 +55,7 @@ class Arena():
             "Content-Type": "application/json"
         }
 
-        self._reqs_remaining=123456789 #arbitrary high - depends on your deal with Arena
+        self._reqs_remaining=123456789 #arbitrary high - depends on your deal with Arena. Updates after first call.
 
         #login
         try:
@@ -129,7 +130,7 @@ class Arena():
         #set auth token
         self.headers["arena_session_id"]=login_data["arenaSessionId"]
         #set time to re-auth, 1 min before expiry
-        self.reauth_utc = int(time.time())+60*80 # to customize
+        self.reauth_utc = int(time.time())+60*60*89
 
     def logout(self):
 
@@ -186,20 +187,17 @@ class Arena():
         resp.raise_for_status()
 
 
-        #update reqs remaining
-        # getting the header that mentions how many calls remain
-        #exact name of the HTTP header hidden for more privacy:
-        for k in resp.headers:
-            #debug print
-            #print("test my iterate thru headers loop: ", k)
-            if 'Remain' in k:
-                self._reqs_remaining = int(resp.headers.get(k, self._reqs_remaining))
+        #update requests remaining
+        self._reqs_remaining = int(resp.headers.get("X-Arena-Requests-Remaining", self._reqs_remaining))
 
         # print reqs remaining at login/logout:
-        if endpoint == "/login" or endpoint == "/logout":
-            print(f"Number of remaining requests: {self._reqs_remaining}")
         if self._reqs_remaining < 1000 and self._debug:
             print(f"Caution: {self._reqs_remaining} requests remaining")
+        elif endpoint in ["/login", "/logout"]:
+            print(f"Number of remaining requests: {self._reqs_remaining}")
+
+        #update reauth timer - 90min from last action, not 90min from authentication
+        self.reauth_utc=int(time.time())+60*60*89
 
         if method.lower()=="delete":
             return
