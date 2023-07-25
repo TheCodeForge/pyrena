@@ -17,6 +17,7 @@ setuptools.setup(
 	package_dir={
 		"pyrena":"pyrena"
 	},
+	python_requires= '>=3.7',
 	long_description = readme,
 	long_description_content_type = "text/markdown"
 )
