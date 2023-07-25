@@ -27,7 +27,9 @@ import pyrena
 client = pyrena.Arena("username", "password")
 ```
 
-Government users should add the parameter `arenagov=True` during client creation.
+Users on the government server should add the parameter `arenagov=True` during client creation.
+
+Users on the Europe server should add the parameter `europe=True` during client creation. 
 
 ### Change users
 
@@ -56,3 +58,4 @@ Option 2 - get object by its "user-friendly" ID (known as `number` in the API)
 
 ```python
 my_capa = client.find(client.QualityProcess, number="CAPA-000001")
+```
