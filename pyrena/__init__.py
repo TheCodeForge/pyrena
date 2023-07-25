@@ -140,6 +140,8 @@ class Arena():
         self.headers["arena_session_id"]=login_data["arenaSessionId"]
         #set time to re-auth, 1 min before expiry
         self.reauth_utc = int(time.time())+60*60*89
+        #update reqs remaining
+        self._reqs_remaining = login_data["workspaceRequestLimit"]
 
     def logout(self):
 
