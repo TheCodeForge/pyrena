@@ -41,6 +41,15 @@ class Change(Object, openable_mixin):
 
     @property
     @lazy
+    def implementation_tasks(self):
+        tasks = self._client.Listing(self._client.ChangeImplementationTask, endpoint=f"/changes/{self.guid}/implementationtasks")
+        for task in tasks:
+            task.change=self
+        return tasks
+    
+
+    @property
+    @lazy
     def implementation_file_associations(self):
 
         files = self._client.Listing(self._client.ImplementationFileAssociation, endpoint=f"/changes/{self.guid}/implementationfiles")
@@ -118,6 +127,33 @@ class ChangeItemAssociation(Object):
     def endpoint(self):
         return f"/changes/{self.change.guid}/files/{self.guid}"
 
+
+class ChangeImplementationTask(Object):
+
+    @property
+    def endpoint(self):
+        return f"/changes/{self.change.guid}/implementationtasks/{self.guid}"
+
+    @property
+    @lazy
+    def files_associations(self):
+        files = self._client.Listing(self._client.ChangeImplementationTaskFile, endpoint=f"{self.endpoint}/files")
+        for file in files:
+            file.task=self
+        return files
+    
+
+class ChangeImplementationTaskFile(Object):
+
+    @property
+    def endpoint(self):
+        return f"/changes/{self.task.change.guid}/implementationtasks/{self.task.guid}/files/{self.guid}"
+
+    @property
+    @lazy
+    def file(self):
+        return self._client.File(self.__dict__['file']['guid'])
+    
 
 class ImplementationFileAssociation(Object):
 
