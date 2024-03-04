@@ -14,12 +14,14 @@ import json
 
 import pyrena.classes as classes
 
+_version="1.4.1"
+
 class ArenaHTTPError(Exception):
     pass
 
 class Arena():
 
-    def __init__(self, username=None, password=None, env=None, ssl_verify=True, user_agent="Python Pyrena", verbose=False, arenagov=False, europe=False):
+    def __init__(self, username=None, password=None, env=None, ssl_verify=True, user_agent=f"Python Pyrena v{_version}", verbose=False, arenagov=False, europe=False):
 
         """
         Creates the Arena client
@@ -202,10 +204,11 @@ class Arena():
         self._reqs_remaining = int(resp.headers.get("X-Arena-Requests-Remaining", self._reqs_remaining-1))
 
         # print reqs remaining at login/logout:
-        if self._reqs_remaining < 1000 and self._debug:
-            print(f"Caution: {self._reqs_remaining} requests remaining")
-        elif endpoint in ["/login", "/logout"]:
-            print(f"Number of remaining requests: {self._reqs_remaining}")
+        if self._debug:
+            if self._reqs_remaining < 1000:
+                print(f"Caution: {self._reqs_remaining} requests remaining")
+            elif endpoint in ["/login", "/logout"]:
+                print(f"Number of remaining requests: {self._reqs_remaining}")
 
         #update reauth timer - 90min from last action, not 90min from authentication
         self.reauth_utc=int(time.time())+60*60*89
