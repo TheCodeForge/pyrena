@@ -255,11 +255,19 @@ class Object():
     def cache_key(self):
         return f"{self.__class__.__name__};{self.guid}"
 
+    def user(self):
+        return self.creator
+
     @property
     @lazy
-    def user(self):
+    def creator(self):
         return self._client.User(self.creator['guid'])
 
+        data={x: self.__dict__[x] for x in self.__dict__}
+
+        data.pop("_client", None)
+        data.pop("_cache", None)
+        
     @property
     def json(self):
 
@@ -269,11 +277,6 @@ class Object():
             else:
                 return x
 
-        data={x: self.__dict__[x] for x in self.__dict__}
-
-        data.pop("_client", None)
-        data.pop("_cache", None)
-        
         data={x:process_values(data[x]) for x in data}
 
         return data
@@ -281,10 +284,14 @@ class Object():
     
 class openable_mixin():
 
+    def url(self):
+
+        return f"{self._client.browser_url}{self.guid}"
+
 
     def open(self):
         """
         Open the {name} in the browser. Requires also being logged into Arena in the default web browser.
         """
 
-        webbrowser.open(f"{self._client.browser_url}{self.guid}")
+        webbrowser.open(self.url)
