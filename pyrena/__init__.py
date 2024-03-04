@@ -141,7 +141,7 @@ class Arena():
         #set time to re-auth, 1 min before expiry
         self.reauth_utc = int(time.time())+60*60*89
         #update reqs remaining
-        self._reqs_remaining = login_data["workspaceRequestLimit"]
+        self._reqs_remaining = login_data.get("workspaceRequestLimit",1234567890)
 
     def logout(self):
 
@@ -199,7 +199,7 @@ class Arena():
 
 
         #update requests remaining
-        self._reqs_remaining = int(resp.headers.get("X-Arena-Requests-Remaining", self._reqs_remaining))
+        self._reqs_remaining = int(resp.headers.get("X-Arena-Requests-Remaining", self._reqs_remaining-1))
 
         # print reqs remaining at login/logout:
         if self._reqs_remaining < 1000 and self._debug:
