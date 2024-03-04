@@ -286,6 +286,10 @@ class openable_mixin():
 
     def url(self):
 
+        """
+        Returns a permanent link that may be used to access the {name} by anyone logged into the workspace.
+        """
+
         return f"{self._client.browser_url}{self.guid}"
 
 
