@@ -14,7 +14,7 @@ import json
 
 import pyrena.classes as classes
 
-_version="1.4.1"
+_version="1.4.2"
 
 class ArenaHTTPError(Exception):
     pass
