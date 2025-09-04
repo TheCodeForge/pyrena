@@ -82,19 +82,19 @@ class Arena():
     def __getattr__(self, name):
 
         if name in ['username', '_username', 'password', '_password']:
-            raise AttributeError
+            raise AttributeError(f"Attribute `{name}` may not be accessed this way")
 
         obj = getattr(classes, name, None)
 
         if not obj and name in self.__dict__:
             return self.__dict__[name]
         elif not obj:
-            raise AttributeError
+            raise AttributeError(f"Attribute {self}.{name} not found")
 
         if obj and not isinstance(obj, type):
-            raise AttributeError
+            raise AttributeError(f"Attribute {self}.{name} refers to object of type Type")
         elif not obj:
-            raise AttributeError
+            raise AttributeError(f"Attribute {self}.{name} does not exist")
 
         obj._client=self
 
@@ -423,7 +423,13 @@ def docs():
 
             args = [f"{'*' if params[x].name=='args' else ''}{'**' if params[x].name=='kwargs' else ''}{params[x].name}{f'={params[x].default.__repr__()}' if params[x].default != params[x].empty else ''}" for x in params if params[x].name!='self']
 
-            doc = getattr(class_obj, method).__doc__.format(name=class_obj.__name__)
+            docstr_raw = getattr(class_obj, method).__doc__
+
+            if not docstr_raw:
+                #print(f"Method {class_obj}.{method} missing docstring")
+                continue
+
+            doc = docstr_raw.format(name=class_obj.__name__)
 
             md+= f"### `{method}({', '.join(args)})`\n\n{doc}\n\n"
 
